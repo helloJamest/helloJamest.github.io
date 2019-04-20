@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+    
+    <title>最大熵模型算法 | Hello Jamest</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    
+      <link rel="icon" href="/favicon.png">
+    
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <link rel="stylesheet" href="/js/google-code-prettify/tomorrow-night-eighties.min.css">
+
+  </head>
+
+  <body>
+</body></html>
+<header>
+	<a id="logo" href="/" title="Hello Jamest">
+	<img src="/favicon.png" alt="Hello Jamest"></a>
+	
+	
+		<!--搜索栏-->
+		<i class="js-toggle-search iconfont icon-search"></i>
+
+
+<form class="js-search search-form search-form--modal" method="get" action="http://gushi.li" role="search">
+	<div class="search-form__inner">
+		<div>
+			<i class="iconfont icon-search"></i>
+			<input class="text-input" placeholder="Enter Key..." type="search">
+		</div>
+	</div>
+</form>
+	
+
+	
+		<!--侧边导航栏-->
+		<a id="nav-toggle" href="#"><span></span></a>
+
+<nav>
+	<div class="menu-top-container">
+		<ul id="menu-top" class="menu">
+			
+				
+				<li class="current-menu-item">
+					<a href="http://weibo.com/" target="_blank">Weibo</a>
+				</li>
+			
+		</ul>
+	</div>
+</nav>
+	
+
+</header>
+<div class="m-header ">
+	<section id="hero1" class="hero">
+		<div class="inner">
+		</div>
+	</section>
+	
+		<figure class="top-image" data-enable="true"></figure>
+	
+</div>
+
+<!--文章列表-->
+<div class="wrapper">
+  
+    <!--文章-->
+<article>
+	
+  
+    <h1 class="post-title" itemprop="name">
+      最大熵模型算法
+    </h1>
+  
+
+	<div class="post-body mb">
+		<h1 id="最大熵模型算法"><a href="#最大熵模型算法" class="headerlink" title="最大熵模型算法"></a>最大熵模型算法</h1><p>最大熵模型是指在满足约束条件的模型集合中选取熵最大的模型，即不确定性最大的模型。</p>
+<h2 id="最大熵原理"><a href="#最大熵原理" class="headerlink" title="最大熵原理"></a>最大熵原理</h2><p><strong>最大熵思想</strong>：当你要猜一个概率分布时，如果你对这个分布一无所知，那就猜熵最大的均匀分布，如果你对这个分布知道一些情况，那么，就猜满足这些情况的熵最大的分布。</p>
+<h2 id="算法推导"><a href="#算法推导" class="headerlink" title="算法推导"></a>算法推导</h2><p>按照最大熵原理,我们应该优先保证模型满足已知的所有约束。那么如何得到这些约束呢?<br>思路是:从训练数据$T$中抽取若干特征,然后要求这些特征在$T$上关于经验分布的期望与它们在模型中关于$p(x,y)$的数学期望相等,这样,一个特征就对应一个约束。<br>假设训练集为$T={(x1,y1),(x2,y2),…,(xn,yn)}$。则联合分布$P(x,y)$的经验分布和边缘分布$P(x)$的经验分布为：<br>$$\tilde{P}(x,y)=\tilde{P}(X=x,Y=y)=\frac{count(x,y)}{N}$$<br>$$\tilde{P}(x)=\tilde{P}(X=x)=\frac{count(x)}{N}$$<br>我们定义特征函数<br>$$f(x,y)=<br>\begin{cases}<br>1&amp; \text{x,y满足某一事实}\<br>0&amp; \text{否则}<br>\end{cases}$$</p>
+<p>设$E_{\tilde{P}}(f)$：表示特征函数$f$在训练数据$T$上关于$\tilde{P}(x,y)$的数学期望：<br>$$E_{\tilde{P}}(f)=\sum_{x,y}{\tilde{P}(x,y)f(x,y)}<br>$$<br>设$E_p(f)$：表示特征函数$f$在模型上关于$P(x,y)$的数学期望<br>$$E_(f)=\sum_{x,y}{P(x,y)f(x,y)} =\sum_{x,y}{P(x)P(y|x)f(x,y)}<br>$$<br>由于$P(x)$是未知的，我们使用$\tilde{P}(x)$来近似表示。于是有<br>$$E_(f)=\sum_{x,y}{\tilde{P}(x)P(y|x)f(x,y)}<br>$$</p>
+<p><strong>最终我们需要计算的条件概率为：$P(Y|X)$。</strong><br>我们的条件熵为：<br>$$<br>H(P) = -\sum_{x,y}P(x)P(y|x)\log{P(y|x)}<br>$$<br>同样，我们需要将$P(x)$的值进行近似处理：<br>$$<br>H(P) = -\sum_{x,y}\tilde{P}(x)P(y|x)\log{P(y|x)}<br>$$<br>另外，对于任意输入样例，它总是属于某一个输出类别，因而<br>$$<br>\sum_{y}P(y|x)=1<br>$$<br>因此，现在我们将上述问题转变成了一个有条件的最优化问题：<br>$$<br>\begin{aligned}<br>\max\ \ &amp;{H(P)= -\sum_{x,y}\tilde{P}(x)P(y|x)\log{P(y|x)}}\<br>s.t.\ \ &amp;E_{P}(f)=E_{\tilde{P}}(f)\<br>&amp;\sum_{y}P(y|x)=1<br>\end{aligned}<br>$$<br>即，<br>$$<br>\begin{aligned}<br>\min\ \ &amp;{-H(P)= \sum_{x,y}\tilde{P}(x)P(y|x)\log{P(y|x)}}\<br>s.t.\ \ &amp;E_{P}(f)=E_{\tilde{P}}(f)\<br>&amp;\sum_{y}P(y|x)=1<br>\end{aligned}<br>$$<br>这里，将约束最小化的原始问题转换为无约束最优化的对偶问题，通过对偶问题来求解原始问题。<br>首先，引入拉格朗日乘子$w_0,w_1,…,w_n$，定义拉格朗日函数$L(P,w)$,<br>$$<br>\begin{aligned}<br>L(P,w)=&amp;-H(P)+w_0\left(1-\sum_y{P(y|x)}\right)+\sum_{i=1}^n{w_i(E_{\tilde{P}}(f_i)-E_{P}(f_i))}\<br>=&amp;\sum_{x,y}\tilde{P}(x)P(y|x)\log{P(y|x)}+w_0\left(1-\sum_y{P(y|x)}\right)+\sum_{i=1}^n{w_i(E_{\tilde{P}}(f_i)-E_{P}(f_i))}<br>\end{aligned}<br>$$<br>最优化原始问题的对偶问题是：<br>$$<br>\max_w{\min_P{L(P,w)}}<br>$$<br>由于$L(P,w)$是$P$的凸函数，原始问题的解与对偶问题的解是等价的。<br>将$L(P,w)$对$P(y│x)$求偏导数，得<br>$$<br>\begin{aligned}<br>\frac{\partial L(P,w)}{\partial P(y│x)}=&amp;\sum_{x,y}{\tilde{P}(x)(\log{P(y|x)}}+1)-\sum_y{w_0}-\sum_{x,y}(\tilde{P}(x)\sum_{i=1}^nw_if_i(x,y))\<br>=&amp;\sum_{x,y}\tilde{P}(x)\left(\log{P(y|x)}+1-w_0-\sum_i^nw_if_i(x,y)\right)<br>\end{aligned}<br>$$<br>令偏导数为0，解得<br>$$<br>\begin{aligned}<br>P(y|x)=&amp;\exp({\sum_{i=1}^nw_if_i(x,y)+w_0-1})\<br>=&amp;\exp({\sum_{i=1}^nw_if_i(x,y)})\exp({w_0-1})<br>\end{aligned}<br>$$<br>由于<br>$$<br>\sum_{y}P(y|x)=1<br>$$<br>有，<br>$$<br>\sum_{y}P(y|x)=\sum_{y}\exp({\sum_{i=1}^nw_if_i(x,y)})\exp({w_0-1})=1<br>$$<br>得，<br>$$<br>\exp({w_0-1})=\frac{1}{\sum_{y}\exp({\sum_{i=1}^nw_if_i(x,y)})}<br>$$<br>令规范化因子$Z_w (x)$为<br>$$<br>Z_w(x)=\sum_{y}\exp({\sum_{i=1}^nw_if_i(x,y)})<br>$$<br>此时得到对偶问题的极小解为：<br>$$<br>P_w(y|x)=\frac{1}{Z_w(x)}e^{\sum_{i=1}^nw_if_i(x,y)}<br>$$<br>这就是我们所需要的最大熵模型下的概率估计。<br>我们再回顾下推导流程，</p>
+<ul>
+<li>首先定义我们的约束条件：1、定义特征函数，约束为其在数据集上关于经验分布的期望与它们在模型中的数学期望相等；2、关于x的条件概率总和为1。</li>
+<li>确定我们的目标：最大化在条件概率分布$P(Y|X)$上的条件熵，在约束上构建构建我们的最优化问题。</li>
+<li>引进拉格朗日乘子，定义拉格朗日函数，通过求解对偶问题来求解原始问题。</li>
+</ul>
+<p><font color="red">实际上，对偶问题的极大化等价于最大熵模型的极大似然估计。</font>至此，我们已经得到了最大熵模型的目标估计，而模型中的最优参数则是对偶问题最大时的参数。<br>具体学习算法有改进的迭代尺度法（IIS）与拟牛顿法。</p>
+<h2 id="最大熵与逻辑回归"><a href="#最大熵与逻辑回归" class="headerlink" title="最大熵与逻辑回归"></a>最大熵与逻辑回归</h2><p>逻辑回归是最大熵对应类别为两类时的特殊情况，也就是当逻辑回归类别扩展到多类别时，就是最大熵。<br>其联系在于：指数簇分布的最大熵等价于其指数形式的最大似然界；二项式的最大熵解等价于二项式指数形式(sigmoid)的最大似然，多项式分布的最大熵等价于多项式分布指数形式(softmax)的最大似然，因此为什么用sigmoid函数，那是因为指数簇分布最大熵的特性的必然性。<br>另外，逻辑回归模型与最大熵模型都属于对数线性模型。</p>
+<h2 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h2><ul>
+<li><p>最大熵模型的优点有：</p>
+<ul>
+<li>最大熵统计模型获得的是所有满足约束条件的模型中信息熵极大的模型,作为经典的分类模型时准确率较高。</li>
+<li>可以灵活地设置约束条件，通过约束条件的多少可以调节模型对未知数据的适应度和对已知数据的拟合程度</li>
+</ul>
+</li>
+<li><p>最大熵模型的缺点有：</p>
+<ul>
+<li>由于约束函数数量和样本数目有关系，导致迭代过程计算量巨大，实际应用比较难。</li>
+</ul>
+</li>
+</ul>
+
+	</div>
+	<div class="meta split">
+		
+			<span>本文总阅读量 <span id="busuanzi_value_page_pv"></span> 次</span>
+		
+		<time class="post-date" datetime="2019-04-19T14:38:34.000Z" itemprop="datePublished">2019-04-19</time>
+	</div>
+</article>
+
+<!--评论-->
+
+	
+<div class="ds-thread" data-thread-key="最大熵模型" data-title="最大熵模型算法" data-url="http://yoursite.com/2019/04/19/最大熵模型/"></div>
+<script type="text/javascript">
+
+var duoshuoQuery = {short_name:"yumemor"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0]
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+</script>
+
+
+  
+</div>
+
+
+  <svg id="bigTriangleColor" width="100%" height="40" viewbox="0 0 100 102" preserveaspectratio="none">
+    <path d="M0 0 L50 100 L100 0 Z"/>
+  </svg>
+
+  
+
+
+  <div class="wrapper"></div>
+
+
+
+
+
+<div class="fat-footer">
+	<div class="wrapper">
+		<div class="layout layout--center">
+			<div class="layout__item palm-mb">
+				<div class="media">
+					<img class="headimg" src="https://imgchr.github.la/steve.jpeg" alt="Shen Tao">
+					<div class="media__body">
+						<h4>justpsvm</h4>
+						<p class="site-description">Stay Hungry,Stay Foolish.</p>
+					</div>
+				</div>
+				<div class="author-contact">
+					<ul>
+						
+							
+							<li>
+				        		<a href="http://weibo.com/" target="_blank">
+				        			
+				        				<i class="iconfont icon-weibo"></i>
+				        			
+				        		</a>
+				        	</li>
+						
+							
+							<li>
+				        		<a href="https://github.com/" target="_blank">
+				        			
+				        				<i class="iconfont icon-github"></i>
+				        			
+				        		</a>
+				        	</li>
+						
+							
+							<li>
+				        		<a href="https://www.zhihu.com/" target="_blank">
+				        			
+										<i class="iconfont icon-zhihu"></i>
+				        			
+				        		</a>
+				        	</li>
+						
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<footer class="footer" role="contentinfo">
+	<div class="wrapper wrapper--wide split split--responsive">
+		
+			<span>本站总访问量 <span id="busuanzi_value_site_pv"></span> 次, 访客数 <span id="busuanzi_value_site_uv"></span> 人次</span>
+		
+		<span>Theme by <a href="http://github.com/justpsvm">justpsvm</a>. Powered by <a href="http://hexo.io">Hexo</a></span>
+	</div>
+</footer>
+
+	<!-－这里导入了 lib.js 里面涵盖了 jQuery 等框架 所以注释掉-->
+	<!--<script src="http://lib.sinaapp.com/js/jquery/2.0/jquery.min.js"></script>-->
+	<script src="/js/lib.js"></script>
+	<script src="/js/google-code-prettify/prettify.js"></script>
+	<script src="/js/module.js"></script>
+	<script src="/js/script.js"></script>
+	
+		<script async src="http://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+	
+	<script type="text/javascript">
+		//代码高亮
+		$(document).ready(function(){
+	 		$('pre').addClass('prettyprint linenums').attr('style', 'overflow:auto;');
+   			prettyPrint();
+		});
+	</script>
+	
+
