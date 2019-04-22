@@ -31,9 +31,13 @@
 <p>  $$<br>  \min_{w,b} L(w,b,α) = -\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)+\sum_{i=1}^Nα_i<br>  $$</p>
 <ul>
 <li><p>求$\min_{w,b} L(w,b,α)$对$α$的极大:</p>
-<p>$$<br>\begin{aligned}<br>\max_{α}\ \ \ &amp;-\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)+\sum_{i=1}^Nα<em>i \\<br>s.t.\ \ \ &amp;\sum</em>{i=1}^N{α_i y_i}=0\\<br>&amp;α_i≥0，i=1,2,…,N<br>\end{aligned}<br>$$</p>
+<p>$$<br>\max_{α}\ \ \ -\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)+\sum_{i=1}^Nα_i<br>$$</p>
+<p>$$<br>s.t.\ \ \ \sum_{i=1}^N{α_i y_i}=0<br>$$</p>
+<p>$$<br>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ α_i≥0，i=1,2,…,N<br>$$</p>
 <p>即：</p>
-<p>$$<br>\begin{aligned}<br>\min_{α}\ \ \ &amp;\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)-\sum_{i=1}^Nα<em>i \\<br>s.t.\ \ \ &amp;\sum</em>{i=1}^N{α_i y_i}=0\\<br>&amp;α_i≥0，i=1,2,…,N<br>\end{aligned}<br>$$</p>
+<p>$$<br>\min_{α}\ \ \ \frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)-\sum_{i=1}^Nα_i<br>$$</p>
+<p>$$<br>s.t.\ \ \ \sum_{i=1}^N{α_i y_i}=0<br>$$</p>
+<p>$$<br>\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ α_i≥0，i=1,2,…,N<br>$$</p>
 <p>求得最优解$α^<em>=({α_1}^</em>,{α_2}^<em>,…,{α_N}^</em>)^T$<br>计算</p>
 <p>$$<br>w^<em>=\sum_{i=1}^N {α_i}^</em> y_i x_i<br>$$</p>
 <p>并选择$α^<em>$的一个正分量${α_j}^</em>&gt;0$，计算</p>
