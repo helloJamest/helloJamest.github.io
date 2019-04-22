@@ -1,17 +1,30 @@
 <!DOCTYPE html><html lang="zh-Hans"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>逻辑回归模型 | Jamest</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.4.0/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">逻辑回归模型</h1><a id="logo" href="/.">Jamest</a><p class="description"></p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Start</i></a><a href="/archives/"><i class="fa fa-archive"> Archiv</i></a><a href="/about/"><i class="fa fa-user"> Über</i></a><a href="/atom.xml"><i class="fa fa-rss"> RSS</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">逻辑回归模型</h1><div class="post-meta">Apr 21, 2019</div><div class="post-content"><p>逻辑回归模型是针对线性可分问题的一种易于实现而且性能优异的分类模型。<br><strong>它假设数据服从<font color="red">伯努利分布</font>,通过<font color="red">极大化似然函数</font>的方法，运用<font color="red">梯度下降法</font>来求解参数，来达到将数据二分类的目的。</strong></p>
 <a id="more"></a>
 <h2 id="算法推导"><a href="#算法推导" class="headerlink" title="算法推导"></a>算法推导</h2><ul>
-<li>引入几率比（odds）：指一个事件发生的概率与不发生概率的比值。对其求log，可得：<br>$$<br>logit(p) = \log{\frac{p}{1-p}}<br>$$</li>
+<li>引入几率比（odds）：指一个事件发生的概率与不发生概率的比值。对其求log，可得：<script type="math/tex; mode=display">
+logit(p) = \log{\frac{p}{1-p}}</script></li>
 </ul>
-<p>将对数几率记为输入特征值的线性表达式,可得<br>$$<br>logit(P(Y=1|X)) = w^Tx<br>$$<br>对于某一样本属于特定类别的概率，为$logit$函数的反函数，称为$logistic$函数，即$sigmoid$函数:<br>$$<br>\phi(x) = \frac{1}{1+e^{-z}}<br>$$</p>
-<blockquote>
+<p>将对数几率记为输入特征值的线性表达式,可得</p>
+<script type="math/tex; mode=display">
+logit(P(Y=1|X)) = w^Tx</script><p>对于某一样本属于特定类别的概率，为$logit$函数的反函数，称为$logistic$函数，即$sigmoid$函数:</p>
+<script type="math/tex; mode=display">
+\phi(x) = \frac{1}{1+e^{-z}}</script><blockquote>
 <p>逻辑斯蒂回归采用sigmoid函数作为激励函数</p>
 </blockquote>
 <ul>
-<li><p>逻辑斯蒂回归模型定义：<br>$$<br>P(Y=1|X) = \frac{e^{wx}}{1+e^{wx}}<br>$$<br>$$<br>P(Y=0|X) = \frac{1}{1+e^{wx}}<br>$$<br>可知，输出$Y=1$的对数几率是输入$x$的线性函数。</p>
+<li><p>逻辑斯蒂回归模型定义：</p>
+<script type="math/tex; mode=display">
+P(Y=1|X) = \frac{e^{wx}}{1+e^{wx}}</script><script type="math/tex; mode=display">
+P(Y=0|X) = \frac{1}{1+e^{wx}}</script><p>可知，输出$Y=1$的对数几率是输入$x$的线性函数。</p>
 </li>
-<li><p>对于给定的训练数据集$T$,可以应用<font color="red">极大似然估计法</font>估计模型参数，假设模型概率分布是：<br>$$<br>P(Y=1|X) = \pi{(x)}<br>$$<br>$$<br>P(Y=0|X) = 1-\pi{(x)}<br>$$<br>似然函数为：<br>$$<br>\prod_{i=1}^N{[\pi(x_i)]^{y_i}[1-\pi(x_i)]^{1-y_i}}<br>$$<br>对数似然函数为：<br>$$<br>L(w)=\sum_{i=1}^N{[y_i\log{\pi(x_i)}+(1-y_i)\log{(1-\pi(x_i))}]}<br>$$</p>
-</li>
+<li><p>对于给定的训练数据集$T$,可以应用<font color="red">极大似然估计法</font>估计模型参数，假设模型概率分布是：</p>
+<script type="math/tex; mode=display">
+P(Y=1|X) = \pi{(x)}</script><script type="math/tex; mode=display">
+P(Y=0|X) = 1-\pi{(x)}</script><p>似然函数为：</p>
+<script type="math/tex; mode=display">
+\prod_{i=1}^N{[\pi(x_i)]^{y_i}[1-\pi(x_i)]^{1-y_i}}</script><p>对数似然函数为：</p>
+<script type="math/tex; mode=display">
+L(w)=\sum_{i=1}^N{[y_i\log{\pi(x_i)}+(1-y_i)\log{(1-\pi(x_i))}]}</script></li>
 </ul>
 <h2 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h2><ul>
 <li><p>逻辑斯蒂回归模型的优点有：</p>
