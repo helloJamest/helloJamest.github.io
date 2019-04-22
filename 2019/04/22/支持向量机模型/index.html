@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>支持向量机模型 | Jamest</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.4.0/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">支持向量机模型</h1><a id="logo" href="/.">Jamest</a><p class="description"></p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Start</i></a><a href="/archives/"><i class="fa fa-archive"> Archiv</i></a><a href="/about/"><i class="fa fa-user"> Über</i></a><a href="/atom.xml"><i class="fa fa-rss"> RSS</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">支持向量机模型</h1><div class="post-meta">Apr 22, 2019</div><div class="post-content"><p>支持向量机模型(SVM)是一个二分类模型，基本思想是<strong>求解能够正确划分训练数据集并且几何间隔最大的分离超平面</strong>，其学习策略便是间隔最大化，最终化为一个凸二次规划问题的求解。<br>SVM可分为线性可分支持向量机、线性支持向量机和非线性支持向量机。</p>
+<a id="more"></a>
+<h2 id="算法推导"><a href="#算法推导" class="headerlink" title="算法推导"></a>算法推导</h2><ol>
+<li>线性可分支持向量机</li>
+</ol>
+<ul>
+<li><p>引入函数间隔和几何间隔</p>
+<ul>
+<li>函数间隔<br>定义超平面(w,b),它关于样本点$(x_i,y_i)$的函数间隔为：<br>$$<br>ŷ_i=y_i (w·x_i+b)<br>$$<br>超平面关于训练数据集T的函数间隔为：<br>$$<br>ŷ=\min_{i=1,…,n}⁡ŷ_i<br>$$</li>
+<li>几何间隔<br>定义超平面(w,b),它关于样本点$(x_i,y_i)$的函数间隔为：<br>$$<br>γ_i=y_i·\frac{1}{||w||}·(w·x_i+b)<br>$$<br>超平面关于训练数据集$T$的函数间隔为：<br>$$<br>γ=\min_{i=1,…,n}⁡γ_i<br>$$<br>故函数间隔和几何间隔的关系：<br>$$<br>γ_i=\frac{ŷ_i}{||w||}<br>$$</li>
+</ul>
+</li>
+<li><p>线性向量机的基本思想是硬间隔最大化，即：<br>$$<br>\begin{aligned}<br>\max_{w,b} \ \ \ \ &amp;γ\\<br>s.t.\ \ \ \ \ &amp;y_i·\frac{1}{||w||} ·(w·x_i+b)≥γ，i=1,2,…,N<br>\end{aligned}<br>$$<br>即：<br>$$<br>\begin{aligned}<br>\max_{w,b} \ \ \ \ &amp;\frac{ŷ}{||w||}\\<br>s.t.\ \ \ \ \ &amp;y_i·(w·x_i+b)≥ŷ，i=1,2,…,N<br>\end{aligned}<br>$$<br>取$ŷ=1$，得<br>$$<br>\begin{aligned}<br>\min_{w,b} \ \ \ \ &amp;\frac{1}{2}{||w||}^2\\<br>s.t.\ \ \ \ \ &amp;y_i·(w·x_i+b)-1≥0，i=1,2,…,N<br>\end{aligned}<br>$$</p>
+<blockquote>
+<p>这是一个凸二次规划问题，通过引入拉格朗日乘子法，构建拉格朗日对偶函数，通过求其对偶函数的解，从而得到原始问题的最优解。</p>
+</blockquote>
+</li>
+</ul>
+<p>定义拉格朗日函数：<br>$$<br>L(w,b,α)=  \frac{1}{2}{||w||}^2-\sum_{i=1}^N{α_iy_i (w·x_i+b)}+\sum_{i=1}^N{α_i}<br>$$<br>其中，$α={(α_1,α_2,…,α_N)}^T$为拉格朗日乘子向量，$α_i≥0，i=1,2,…,N$</p>
+<p>原始问题的对偶问题是<font color="red">极大极小问题</font>：</p>
+<p>$$<br>\max_α{\min_{w,b} L(w,b,α)}<br>$$</p>
+<ul>
+<li><p>求解对偶问题</p>
+<ul>
+<li><p>求$\min_{w,b} L(w,b,α)$<br>分别对w,b求偏导数并令其为0：<br>$$<br>∇<em>w L(w,b,α)=w-\sum</em>{i=1}^N{α_i y_i x_i}=0 \\<br>∇<em>b L(w,b,α)=\sum</em>{i=1}^N{α_i y_i}=0<br>$$<br>得<br>$$<br>w=\sum_{i=1}^N{α_i y_i x_i} \\<br>\sum_{i=1}^N{α_i y_i}=0<br>$$<br>代入拉格朗日函数，得<br>$$<br>\begin{aligned}<br>L(w,b,α)=&amp;\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j+b)-\sum_{i=1}^N{α_i y_i ((\sum_{j=1}^N{α_j y_j x_j})·x_i+b)}+\sum_{i=1}^Nα<em>i \\<br>=&amp;-\frac{1}{2}\sum</em>{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)+\sum_{i=1}^Nα<em>i<br>\end{aligned}<br>$$<br>即<br>$$<br>\min</em>{w,b} L(w,b,α) = -\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)+\sum_{i=1}^Nα_i<br>$$</p>
+</li>
+<li><p>求$\min_{w,b} L(w,b,α)$对$α$的极大<br>$$<br>\begin{aligned}<br>\max_{α}\ \ \ &amp;-\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)+\sum_{i=1}^Nα<em>i \\<br>s.t.\ \ \ &amp;\sum</em>{i=1}^N{α_i y_i}=0\\<br>&amp;α<em>i≥0，i=1,2,…,N<br>\end{aligned}<br>$$<br>即：<br>$$<br>\begin{aligned}<br>\min</em>{α}\ \ \ &amp;\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)-\sum_{i=1}^Nα<em>i \\<br>s.t.\ \ \ &amp;\sum</em>{i=1}^N{α_i y_i}=0\\<br>&amp;α_i≥0，i=1,2,…,N<br>\end{aligned}<br>$$<br>求得最优解$α^<em>=({α_1}^</em>,{α_2}^<em>,…,{α_N}^</em>)^T$<br>计算<br>$$<br>w^<em>=\sum_{i=1}^N {α_i}^</em> y_i x_i<br>$$<br>并选择$α^<em>$的一个正分量${α_j}^</em>&gt;0$，计算<br>$$<br>b^<em>=y_i-\sum_{i=1}^N {α_i}^</em> y_i (x_i·x_j)<br>$$<br>求得分类决策函数：<br>$$<br>f(x)=sign(w^<em>·x+b^</em>)<br>$$<br>可知$w^<em>$，$b^</em>$只依赖训练数据中对应于${α_i}^<em>&gt;0$的样本点$(x_i,y_i)$，而其他样本点对$w^</em>$，$b^<em>$没有影响。将训练样本中对应于${α_i}^</em>&gt;0$的实例点称为支持向量。</p>
+</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li>线性支持向量机<br>对于线性不可分训练集，引入<font color="red">松弛变量</font>，采用软间隔最大化策略</li>
+</ol>
+<ul>
+<li>其原始问题为：</li>
+</ul>
+<p>$$<br>\begin{aligned}<br>\min_{w,b} \ \ \ \ &amp;\frac{1}{2}{||w||}^2+C\sum_{i=1}^{N}{ξ_i}  \\<br>s.t.\ \ \ \ \ &amp;y_i·(w·x_i+b)≥1-ξ_i，i=1,2,…,N \\<br>&amp;ξ<em>i≥0，i=1,2,…,N<br>\end{aligned}<br>$$<br>构建拉格朗日函数：<br>$$<br>\begin{aligned}<br>L(w,b,ξ,α,μ)=\frac{1}{2}{||w||}^2+C\sum</em>{i=1}^{N}{ξ<em>i}-\sum</em>{i=1}^N{α_i(y_i (w·x_i+b)-1+ξ<em>i)}-\sum</em>{i=1}^N{μ_i ξ<em>i}<br>\end{aligned}<br>$$<br>求导后代入，得<br>$$<br>min</em>{w,b} {L(w,b,ξ,α,μ)}=-\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)+\sum_{i=1}^Nα<em>i<br>$$<br>得其对偶问题：<br>$$<br>\begin{aligned}<br>\max</em>{α}\ \ \ &amp;-\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)+\sum_{i=1}^Nα<em>i \\<br>s.t.\ \ \ &amp;\sum</em>{i=1}^N{α_i y_i}=0\\<br>&amp;α_i≥0，i=1,2,…,N \\<br>&amp;C-α_i-μ_i=0 \\<br>&amp;μ_i≥0，i=1,2,…,N<br>\end{aligned}<br>$$</p>
+<blockquote>
+<p>可以看做最小化以下目标函数：<br>$$<br>\sum_{i=1}^N[1-(y_i (w·x_i+b)]_++λ||w||^2)<br>$$<br>目标函数第一项是经验风险，称为<font color="red">合页损失函数（hinge loss function）</font></p>
+</blockquote>
+<ol start="3">
+<li>非线性支持向量机<br><font color="red">核函数</font>：我们可以使用核函数，将原始输入空间映射到新的样本空间，从而使原来线性不可分得变成高维的线性可分。<br>在线性支持向量机的对偶问题中，无论是目标函数还是决策函数都只涉及输入实例与实例之间的内积。在对偶问题的目标函数中内积可以用核函数来代替，此时对偶问题的目标函数成为：<br>$$<br>W(α)=\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j K(x_i·x_j)+\sum_{i=1}^Nα<em>i<br>$$<br>同样，分类决策函数中的内积也可以用核函数代替，而分类决策函数成为：<br>$$<br>\begin{aligned}<br>f(x)=&amp;sign(\sum</em>{i=1}^{N_s}α_i^<em>  y_i·ϕ(x_i)·\phi(x)+b^</em>) \\<br>=&amp;sign(\sum_{i=1}^{N_s}α_i^<em>  y_i K(x_i,x)+b^</em>)<br>\end{aligned}<br>$$</li>
+</ol>
+<h2 id="SMO"><a href="#SMO" class="headerlink" title="SMO"></a>SMO</h2><p>SMO是用于快速求解SVM的<br>它选择凸二次规划的两个变量，其他的变量保持不变，然后根据这两个变量构建一个二次规划问题，这个二次规划关于这两个变量解会更加的接近原始二次规划的解，通过这样的子问题划分可以大大增加整个算法的计算速度，关于这两个变量：</p>
+<ol>
+<li>其中一个是严重违反KKT条件的一个变量</li>
+<li>另一个变量是根据自由约束确定，求剩余变量的最大化来确定的。</li>
+</ol>
+<h2 id="相关问题"><a href="#相关问题" class="headerlink" title="相关问题"></a>相关问题</h2><blockquote>
+<p>SVM如何解决<strong>多分类</strong>问题？</p>
+</blockquote>
+<ol>
+<li>直接法<br>直接在目标函数上进行修改，将多个分类面的参数求解合并到一个最优化问题中，通过求解该优化就可以实现多分类（计算复杂度很高，实现起来较为困难）</li>
+<li>间接法<ol>
+<li>一对多<br>其中某个类为一类，其余n-1个类为另一个类，比如A,B,C,D四个类，第一次A为一个类，{B,C,D}为一个类训练一个分类器，第二次B为一个类,{A,C,D}为另一个类,按这方式共需要训练4个分类器，最后在测试的时候将测试样本经过这4个分类器f1(x),f2(x),f3(x)和f4(x),取其最大值为分类器(这种方式由于是1对M分类，会存在偏置，很不实用)</li>
+<li>一对一(libsvm实现的方式)<br>任意两个类都训练一个分类器，那么n个类就需要n<em>(n-1)/2个svm分类器。<br>还是以A,B,C,D为例,那么需要{A,B},{A,C},{A,D},{B,C},{B,D},{C,D}为目标共6个分类器，然后在预测的将测试样本通过这6个分类器之后进行投票选择最终结果。（这种方法虽好，但是需要n</em>(n-1)/2个分类器代价太大，不过 可以使用循环图来进行改进）</li>
+</ol>
+</li>
+</ol>
+<blockquote>
+<p>KKT条件及其物理意义</p>
+</blockquote>
+<p><strong>KKT条件</strong>可以总结成：约束条件（原始约束和引入拉格朗日乘子后的约束）、对x偏导为0、对偶互补条件<br>针对问题：<br>$$<br>\begin{aligned}<br>\min\ &amp;{f(x)} \\<br>s.t.\ \  &amp;h(x)=0 \\<br>&amp;g(x)≤0<br>\end{aligned}<br>$$<br>对于这个问题先不看等式约束，画出不等式约束和目标函数关系图：<br><img src="assets/支持向量机模型-cb470b80.png" alt="不等式约束"><br>其中，阴影部分就是可行域，也就是说可行域从原来的一条线变成了一块区域。那么能取到极值点的地方可能有两种情况：<br>1、还是在 $h(x)$和等值线相切的地方<br>2、$f(x)$的极值点本身就在可行域里面。<br><img src="assets/支持向量机模型-97d4745a.png" alt="两种情况"><br>因为如果不是相切，那么，对任意一个在可行域中的点，如果在它附近往里走或者往外走，$f(x)$一般都会变大或者变小，所以绝大部分点都不会是极值点。除非这个点刚好在交界处，且和等值线相切；或者这个点在可行域内部，但是本身就是$f(x)$的极值点。<br>对于第一种情况，不等式约束就变成等式约束了，定义拉格朗日函数：<br>$$<br>L(x,λ,μ)= f(x)+λh(x)+μg(x)<br>$$<br>使用拉格朗日乘子法：<br>$$<br>∇_x L(x,λ,μ)=0 \\<br>h(x)=0 \\<br>g(x)=0  \\<br>μ≥0<br>$$<br>这里需要解释一下，为什么是$μ≥0$。在“不等式约束”图中，问题的可行域是在$ g(x)≤0$一侧，而$g(x)$ 的梯度是指向大于 0 的一侧，也就是不是可行域的一侧。而求的问题是极小值，所以 $f(x)$ 在交点处的梯度是指向可行域的一侧，也就是说两个梯度一定是相反的。所以也就可以确定这里的系数一定是大于等于0的。而等式约束由于不知道$h(x)$ 的梯度方向，所以对它没有约束。<br>对于第二种情况，不等式约束就相当于没有，定义拉格朗日函数<br>$$<br>L(x,λ)= f(x)+λh(x)<br>$$<br>使用拉格朗日乘子法：<br>$$<br>∇_x L(x,λ)=0 \\<br>h(x)=0 \\<br>g(x)≤0 \\<br>μ=0 \\<br>$$<br>不同的是第一种情况有$g(x)=0$且$μ≥0$，第二种情况$g(x)≤0$且$μ=0$，综合两个问题可得：<br>$$<br>∇_x L(x,λ,μ)=0 \\<br>μg(x)=0 \\<br>μ≥0 \\<br>h(x)=0 \\<br>g(x)≤0 \\<br>$$<br>这个就是 KKT 条件。它的含义是这个优化问题的极值点一定满足这组方程组。（不是极值点也可能会满足，但是不会存在某个极值点不满足的情况）它也是原来的优化问题取得极值的必要条件。</p>
+<blockquote>
+<font color="red">LR与SVM的区别和联系</font>
+</blockquote>
+<p>相同点：<br>1、都是有监督的分类算法；<br>2、如果不考虑核函数，LR和SVM都是线性分类算法。它们的分类决策面都是线性的。<br>3、LR和SVM都是判别式模型。<br>不同点：<br>1、本质上是loss函数不同，或者说分类的原理不同。LR模型找到的那个超平面，是尽量让所有点都远离他，而SVM寻找的那个超平面，是只让最靠近中间分割线的那些点尽量远离，即只用到那些支持向量的样本。SVM只考虑分界面附近的少数点，而LR则考虑所有点。<br>2、SVM是结构风险最小化，LR则是经验风险最小化。<br>结构风险最小化就是在训练误差和模型复杂度之间寻求平衡，防止过拟合，减小泛化误差。为了达到结构风险最小化的目的，最常用的方法就是添加正则项。SVM的loss函数具有L2正则项；LR需要加入正则化项。<br>3、SVM不能产生概率，LR可以产生概率。<br>4、在解决非线性问题时，SVM可采用核函数的机制，而LR通常不采用核函数的方法。<br>5、SVM计算复杂，但效果比LR好，适合小数据集；LR计算简单，适合大数据集，可以在线训练。</p>
+</div><div class="tags"><a href="/tags/algorithms/">algorithms</a></div><div class="post-nav"><a class="next" href="/2019/04/21/逻辑回归模型/">逻辑回归模型</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"><input type="hidden" name="sitesearch" value="http://yoursite.com"></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Kategorien</i></div></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/tags/algorithms/" style="font-size: 15px;">algorithms</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Letzte</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/04/22/支持向量机模型/">支持向量机模型</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/21/逻辑回归模型/">逻辑回归模型</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/19/最大熵模型/">最大熵模型</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/22/hello-world/">Hello World</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/sklearn-ml-tutorial/">sklearn & ml tutorial</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Blogroll</i></div><ul></ul><a href="https://github.com/helloJamest" title="github" target="_blank">github</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2019 <a href="/." rel="nofollow">Jamest.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css"><script type="text/javascript" color="0,0,0" opacity="0.5" zindex="-2" count="50" src="//lib.baomitu.com/canvas-nest.js/2.0.3/canvas-nest.umd.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
