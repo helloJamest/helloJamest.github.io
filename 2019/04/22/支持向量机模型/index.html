@@ -7,76 +7,76 @@
 <li><p>引入函数间隔和几何间隔</p>
 <ul>
 <li>函数间隔<br>定义超平面(w,b),它关于样本点$(x_i,y_i)$的函数间隔为：<script type="math/tex; mode=display">
-ŷ_i=y_i (w·x_i+b)</script>超平面关于训练数据集T的函数间隔为：<script type="math/tex; mode=display">
-ŷ=\min_{i=1,…,n}⁡ŷ_i</script></li>
+ŷ\_i=y_i (w·x_i+b)</script>超平面关于训练数据集T的函数间隔为：<script type="math/tex; mode=display">
+ŷ=\\min_{i=1,…,n}⁡ŷ\_i</script></li>
 <li>几何间隔<br>定义超平面(w,b),它关于样本点$(x_i,y_i)$的函数间隔为：<script type="math/tex; mode=display">
-γ_i=y_i·\frac{1}{||w||}·(w·x_i+b)</script>超平面关于训练数据集$T$的函数间隔为：<script type="math/tex; mode=display">
-γ=\min_{i=1,…,n}⁡γ_i</script>故函数间隔和几何间隔的关系：<script type="math/tex; mode=display">
-γ_i=\frac{ŷ_i}{||w||}</script></li>
+γ\_i=y_i·\\frac{1}{||w||}·(w·x_i+b)</script>超平面关于训练数据集$T$的函数间隔为：<script type="math/tex; mode=display">
+γ=\\min_{i=1,…,n}⁡γ\_i</script>故函数间隔和几何间隔的关系：<script type="math/tex; mode=display">
+γ\_i=\\frac{ŷ\_i}{||w||}</script></li>
 </ul>
 </li>
 <li><p>线性向量机的基本思想是硬间隔最大化，即：</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-\max_{w,b} \ \ \ \ &γ\\
-s.t.\ \ \ \ \ &y_i·\frac{1}{||w||} ·(w·x_i+b)≥γ，i=1,2,…,N
-\end{aligned}</script><p>即：</p>
+\\begin{aligned}
+\\max_{w,b} \\ \\ \\ \\ &γ\\
+s.t.\\ \\ \\ \\ \\ &y_i·\\frac{1}{||w||} ·(w·x_i+b)≥γ，i=1,2,…,N
+\\end{aligned}</script><p>即：</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-\max_{w,b} \ \ \ \ &\frac{ŷ}{||w||}\\
-s.t.\ \ \ \ \ &y_i·(w·x_i+b)≥ŷ，i=1,2,…,N
-\end{aligned}</script><p>取$ŷ=1$，得</p>
+\\begin{aligned}
+\\max_{w,b} \\ \\ \\ \\ &\\frac{ŷ}{||w||}\\
+s.t.\\ \\ \\ \\ \\ &y_i·(w·x_i+b)≥ŷ，i=1,2,…,N
+\\end{aligned}</script><p>取$ŷ=1$，得</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-\min_{w,b} \ \ \ \ &\frac{1}{2}{||w||}^2\\
-s.t.\ \ \ \ \ &y_i·(w·x_i+b)-1≥0，i=1,2,…,N
-\end{aligned}</script><blockquote>
+\\begin{aligned}
+\\min_{w,b} \\ \\ \\ \\ &\\frac{1}{2}{||w||}^2\\
+s.t.\\ \\ \\ \\ \\ &y_i·(w·x_i+b)-1≥0，i=1,2,…,N
+\\end{aligned}</script><blockquote>
 <p>这是一个凸二次规划问题，通过引入拉格朗日乘子法，构建拉格朗日对偶函数，通过求其对偶函数的解，从而得到原始问题的最优解。</p>
 </blockquote>
 </li>
 </ul>
 <p>定义拉格朗日函数：</p>
 <script type="math/tex; mode=display">
-L(w,b,α)=  \frac{1}{2}{||w||}^2-\sum_{i=1}^N{α_iy_i (w·x_i+b)}+\sum_{i=1}^N{α_i}</script><p>其中，$α={(α_1,α_2,…,α_N)}^T$为拉格朗日乘子向量，$α_i≥0，i=1,2,…,N$</p>
+L(w,b,α)=  \\frac{1}{2}{||w||}^2-\\sum_{i=1}^N{α\_iy_i (w·x_i+b)}+\\sum_{i=1}^N{α\_i}</script><p>其中，$α={(α_1,α_2,…,α_N)}^T$为拉格朗日乘子向量，$α_i≥0，i=1,2,…,N$</p>
 <p>原始问题的对偶问题是<font color="red">极大极小问题</font>：</p>
 <script type="math/tex; mode=display">
-\max_α{\min_{w,b} L(w,b,α)}</script><ul>
+\\max_α{\\min_{w,b} L(w,b,α)}</script><ul>
 <li>求解对偶问题<ul>
-<li>求$\min_{w,b} L(w,b,α)$<br>分别对w,b求偏导数并令其为0：</li>
+<li>求$\\min_{w,b} L(w,b,α)$<br>分别对w,b求偏导数并令其为0：</li>
 </ul>
 </li>
 </ul>
 <script type="math/tex; mode=display">
-\begin{aligned}
-∇_w L(w,b,α)=w-\sum_{i=1}^N{α_i y_i x_i}=0 \\
-∇_b L(w,b,α)=\sum_{i=1}^N{α_i y_i}=0
-\end{aligned}</script><p>得</p>
+\\begin{aligned}
+∇_w L(w,b,α)=w-\\sum_{i=1}^N{α_i y_i x_i}=0 \\
+∇\_b L(w,b,α)=\\sum_{i=1}^N{α\_i y_i}=0
+\\end{aligned}</script><p>得</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-w=\sum_{i=1}^N{α_i y_i x_i} \\
-\sum_{i=1}^N{α_i y_i}=0
-\end{aligned}</script><p>代入拉格朗日函数，得</p>
+\\begin{aligned}
+w=\\sum_{i=1}^N{α\_i y_i x_i} \\
+\\sum_{i=1}^N{α\_i y_i}=0
+\\end{aligned}</script><p>代入拉格朗日函数，得</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-L(w,b,α)=&\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j+b)-\sum_{i=1}^N{α_i y_i ((\sum_{j=1}^N{α_j y_j x_j})·x_i+b)}+\sum_{i=1}^Nα_i \\
-=&-\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)+\sum_{i=1}^Nα_i
-\end{aligned}</script><p>即</p>
+\\begin{aligned}
+L(w,b,α)=&\\frac{1}{2}\\sum_{i=1}^N\\sum_{j=1}^N α_i α\_j y_i y_j (x_i·x_j+b)-\\sum_{i=1}^N{α_i y_i ((\\sum_{j=1}^N{α_j y_j x_j})·x_i+b)}+\\sum_{i=1}^Nα_i \\
+=&-\\frac{1}{2}\\sum_{i=1}^N\\sum_{j=1}^N α\_i α\_j y_i y_j (x_i·x_j)+\\sum_{i=1}^Nα\_i
+\\end{aligned}</script><p>即</p>
 <script type="math/tex; mode=display">
-\min_{w,b} L(w,b,α) = -\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)+\sum_{i=1}^Nα_i</script><ul>
-<li>求$\min_{w,b} L(w,b,α)$对$α$的极大<script type="math/tex; mode=display">
-\begin{aligned}
-\max_{α}\ \ \ &-\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)+\sum_{i=1}^Nα_i \\
-s.t.\ \ \ &\sum_{i=1}^N{α_i y_i}=0\\
-&α_i≥0，i=1,2,…,N
-\end{aligned}</script>即：<script type="math/tex; mode=display">
-\begin{aligned}
-\min_{α}\ \ \ &\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)-\sum_{i=1}^Nα_i \\
-s.t.\ \ \ &\sum_{i=1}^N{α_i y_i}=0\\
-&α_i≥0，i=1,2,…,N
-\end{aligned}</script>求得最优解$α^<em>=({α_1}^</em>,{α_2}^<em>,…,{α_N}^</em>)^T$<br>计算<script type="math/tex; mode=display">
-w^*=\sum_{i=1}^N {α_i}^* y_i x_i</script>并选择$α^<em>$的一个正分量${α_j}^</em>&gt;0$，计算<script type="math/tex; mode=display">
-b^*=y_i-\sum_{i=1}^N {α_i}^* y_i (x_i·x_j)</script>求得分类决策函数：<script type="math/tex; mode=display">
-f(x)=sign(w^*·x+b^*)</script>可知$w^<em>$，$b^</em>$只依赖训练数据中对应于${α_i}^<em>&gt;0$的样本点$(x_i,y_i)$，而其他样本点对$w^</em>$，$b^<em>$没有影响。将训练样本中对应于${α_i}^</em>&gt;0$的实例点称为支持向量。</li>
+\\min_{w,b} L(w,b,α) = -\\frac{1}{2}\\sum_{i=1}^N\\sum_{j=1}^N α\_i α\_j y_i y_j (x_i·x_j)+\\sum_{i=1}^Nα\_i</script><ul>
+<li>求$\\min_{w,b} L(w,b,α)$对$α$的极大<script type="math/tex; mode=display">
+\\begin{aligned}
+\\max_{α}\\ \\ \\ &-\\frac{1}{2}\\sum_{i=1}^N\\sum_{j=1}^N α_i α\_j y_i y_j (x_i·x_j)+\\sum_{i=1}^Nα_i \\
+s.t.\\ \\ \\ &\\sum_{i=1}^N{α_i y_i}=0\\
+&α\_i≥0，i=1,2,…,N
+\\end{aligned}</script>即：<script type="math/tex; mode=display">
+\\begin{aligned}
+\\min_{α}\\ \\ \\ &\\frac{1}{2}\\sum_{i=1}^N\\sum_{j=1}^N α_i α\_j y_i y_j (x_i·x_j)-\\sum_{i=1}^Nα_i \\
+s.t.\\ \\ \\ &\\sum_{i=1}^N{α_i y_i}=0\\
+&α\_i≥0，i=1,2,…,N
+\\end{aligned}</script>求得最优解$α^_=({α_1}^_,{α_2}^_,…,{α_N}^_)^T$<br>计算<script type="math/tex; mode=display">
+w^\*=\\sum_{i=1}^N {α_i}^_ y_i x_i</script>并选择$α^_$的一个正分量${α_j}^_&gt;0$，计算<script type="math/tex; mode=display">
+b^_=y_i-\\sum_{i=1}^N {α\_i}^_ y_i (x_i·x_j)</script>求得分类决策函数：<script type="math/tex; mode=display">
+f(x)=sign(w^_·x+b^_)</script>可知$w^_$，$b^_$只依赖训练数据中对应于${α_i}^_&gt;0$的样本点$(x_i,y_i)$，而其他样本点对$w^_$，$b^_$没有影响。将训练样本中对应于${α_i}^*&gt;0$的实例点称为支持向量。</li>
 </ul>
 <ol>
 <li>线性支持向量机<br>对于线性不可分训练集，引入<font color="red">松弛变量</font>，采用软间隔最大化策略</li>
@@ -85,79 +85,77 @@ f(x)=sign(w^*·x+b^*)</script>可知$w^<em>$，$b^</em>$只依赖训练数据中
 <li>其原始问题为：</li>
 </ul>
 <script type="math/tex; mode=display">
-\begin{aligned}
-\min_{w,b} \ \ \ \ &\frac{1}{2}{||w||}^2+C\sum_{i=1}^{N}{ξ_i}  \\
-s.t.\ \ \ \ \ &y_i·(w·x_i+b)≥1-ξ_i，i=1,2,…,N \\
-&ξ_i≥0，i=1,2,…,N
-\end{aligned}</script><p>构建拉格朗日函数：</p>
+\\begin{aligned}
+\\min_{w,b} \\ \\ \\ \\ &\\frac{1}{2}{||w||}^2+C\\sum_{i=1}^{N}{ξ_i}  \\
+s.t.\\ \\ \\ \\ \\ &y_i·(w·x_i+b)≥1-ξ\_i，i=1,2,…,N \\
+&ξ\_i≥0，i=1,2,…,N
+\\end{aligned}</script><p>构建拉格朗日函数：</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-L(w,b,ξ,α,μ)=\frac{1}{2}{||w||}^2+C\sum_{i=1}^{N}{ξ_i}-\sum_{i=1}^N{α_i(y_i (w·x_i+b)-1+ξ_i)}-\sum_{i=1}^N{μ_i ξ_i}
-\end{aligned}</script><p>求导后代入，得</p>
+\\begin{aligned}
+L(w,b,ξ,α,μ)=\\frac{1}{2}{||w||}^2+C\\sum_{i=1}^{N}{ξ_i}-\\sum_{i=1}^N{α_i(y_i (w·x_i+b)-1+ξ\_i)}-\\sum_{i=1}^N{μ_i ξ\_i}
+\\end{aligned}</script><p>求导后代入，得</p>
 <script type="math/tex; mode=display">
-min_{w,b} {L(w,b,ξ,α,μ)}=-\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)+\sum_{i=1}^Nα_i</script><p>得其对偶问题：</p>
+min_{w,b} {L(w,b,ξ,α,μ)}=-\\frac{1}{2}\\sum_{i=1}^N\\sum_{j=1}^N α_i α\_j y_i y_j (x_i·x_j)+\\sum_{i=1}^Nα_i</script><p>得其对偶问题：</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-\max_{α}\ \ \ &-\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)+\sum_{i=1}^Nα_i \\
-s.t.\ \ \ &\sum_{i=1}^N{α_i y_i}=0\\
-&α_i≥0，i=1,2,…,N \\
-&C-α_i-μ_i=0 \\
-&μ_i≥0，i=1,2,…,N
-\end{aligned}</script><blockquote>
+\\begin{aligned}
+\\max_{α}\\ \\ \\ &-\\frac{1}{2}\\sum_{i=1}^N\\sum_{j=1}^N α_i α\_j y_i y_j (x_i·x_j)+\\sum_{i=1}^Nα_i \\
+s.t.\\ \\ \\ &\\sum_{i=1}^N{α\_i y_i}=0\\
+&α\_i≥0，i=1,2,…,N \\
+&C-α\_i-μ\_i=0 \\
+&μ\_i≥0，i=1,2,…,N
+\\end{aligned}</script><blockquote>
 <p>可以看做最小化以下目标函数：</p>
 <script type="math/tex; mode=display">
-\sum_{i=1}^N[1-(y_i (w·x_i+b)]_++λ||w||^2)</script><p>目标函数第一项是经验风险，称为<font color="red">合页损失函数（hinge loss function）</font></p>
+\\sum_{i=1}^N[1-(y_i (w·x_i+b)]_++λ||w||^2)</script><p>目标函数第一项是经验风险，称为<font color="red">合页损失函数（hinge loss function）</font></p>
 </blockquote>
 <ol>
 <li>非线性支持向量机<br><font color="red">核函数</font>：我们可以使用核函数，将原始输入空间映射到新的样本空间，从而使原来线性不可分得变成高维的线性可分。<br>在线性支持向量机的对偶问题中，无论是目标函数还是决策函数都只涉及输入实例与实例之间的内积。在对偶问题的目标函数中内积可以用核函数来代替，此时对偶问题的目标函数成为：<script type="math/tex; mode=display">
-W(α)=\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j K(x_i·x_j)+\sum_{i=1}^Nα_i</script>同样，分类决策函数中的内积也可以用核函数代替，而分类决策函数成为：<script type="math/tex; mode=display">
-\begin{aligned}
-f(x)=&sign(\sum_{i=1}^{N_s}α_i^*  y_i·ϕ(x_i)·\phi(x)+b^*) \\
-=&sign(\sum_{i=1}^{N_s}α_i^*  y_i K(x_i,x)+b^*)
-\end{aligned}</script></li>
+W(α)=\\frac{1}{2}\\sum_{i=1}^N\\sum_{j=1}^N α_i α\_j y_i y_j K(x_i·x_j)+\\sum_{i=1}^Nα_i</script>同样，分类决策函数中的内积也可以用核函数代替，而分类决策函数成为：<script type="math/tex; mode=display">
+\\begin{aligned}
+f(x)=&sign(\\sum_{i=1}^{N_s}α\_i^_  y_i·ϕ(x_i)·\\phi(x)+b^_) \\
+=&sign(\\sum_{i=1}^{N_s}α\_i^_  y_i K(x_i,x)+b^_)
+\\end{aligned}</script></li>
 </ol>
-<h2 id="SMO"><a href="#SMO" class="headerlink" title="SMO"></a>SMO</h2><p>SMO是用于快速求解SVM的<br>它选择凸二次规划的两个变量，其他的变量保持不变，然后根据这两个变量构建一个二次规划问题，这个二次规划关于这两个变量解会更加的接近原始二次规划的解，通过这样的子问题划分可以大大增加整个算法的计算速度，关于这两个变量：</p>
-<ol>
-<li>其中一个是严重违反KKT条件的一个变量</li>
-<li>另一个变量是根据自由约束确定，求剩余变量的最大化来确定的。</li>
-</ol>
+<h2 id="SMO"><a href="#SMO" class="headerlink" title="SMO"></a>SMO</h2><p>SMO是用于快速求解SVM的<br>它选择凸二次规划的两个变量，其他的变量保持不变，然后根据这两个变量构建一个二次规划问题，这个二次规划关于这两个变量解会更加的接近原始二次规划的解，通过这样的子问题划分可以大大增加整个算法的计算速度，关于这两个变量：<br>1. 其中一个是严重违反KKT条件的一个变量<br>2. 另一个变量是根据自由约束确定，求剩余变量的最大化来确定的。</p>
 <h2 id="相关问题"><a href="#相关问题" class="headerlink" title="相关问题"></a>相关问题</h2><blockquote>
 <p>SVM如何解决<strong>多分类</strong>问题？</p>
 </blockquote>
 <ol>
 <li>直接法<br>直接在目标函数上进行修改，将多个分类面的参数求解合并到一个最优化问题中，通过求解该优化就可以实现多分类（计算复杂度很高，实现起来较为困难）</li>
-<li>间接法<ol>
-<li>一对多<br>其中某个类为一类，其余n-1个类为另一个类，比如A,B,C,D四个类，第一次A为一个类，{B,C,D}为一个类训练一个分类器，第二次B为一个类,{A,C,D}为另一个类,按这方式共需要训练4个分类器，最后在测试的时候将测试样本经过这4个分类器f1(x),f2(x),f3(x)和f4(x),取其最大值为分类器(这种方式由于是1对M分类，会存在偏置，很不实用)</li>
-<li>一对一(libsvm实现的方式)<br>任意两个类都训练一个分类器，那么n个类就需要n<em>(n-1)/2个svm分类器。<br>还是以A,B,C,D为例,那么需要{A,B},{A,C},{A,D},{B,C},{B,D},{C,D}为目标共6个分类器，然后在预测的将测试样本通过这6个分类器之后进行投票选择最终结果。（这种方法虽好，但是需要n</em>(n-1)/2个分类器代价太大，不过 可以使用循环图来进行改进）</li>
-</ol>
-</li>
+<li>间接法<pre><code>1\. 一对多
+</code></pre>其中某个类为一类，其余n-1个类为另一个类，比如A,B,C,D四个类，第一次A为一个类，{B,C,D}为一个类训练一个分类器，第二次B为一个类,{A,C,D}为另一个类,按这方式共需要训练4个分类器，最后在测试的时候将测试样本经过这4个分类器f1(x),f2(x),f3(x)和f4(x),取其最大值为分类器(这种方式由于是1对M分类，会存在偏置，很不实用)<pre><code>2\. 一对一(libsvm实现的方式)
+</code></pre>任意两个类都训练一个分类器，那么n个类就需要n_(n-1)/2个svm分类器。<br>还是以A,B,C,D为例,那么需要{A,B},{A,C},{A,D},{B,C},{B,D},{C,D}为目标共6个分类器，然后在预测的将测试样本通过这6个分类器之后进行投票选择最终结果。（这种方法虽好，但是需要n_(n-1)/2个分类器代价太大，不过 可以使用循环图来进行改进）</li>
 </ol>
 <blockquote>
 <p>KKT条件及其物理意义</p>
 </blockquote>
 <p><strong>KKT条件</strong>可以总结成：约束条件（原始约束和引入拉格朗日乘子后的约束）、对x偏导为0、对偶互补条件<br>针对问题：</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-\min\ &{f(x)} \\
-s.t.\ \  &h(x)=0 \\
+\\begin{aligned}
+\\min\\ &{f(x)} \\
+s.t.\\ \\  &h(x)=0 \\
 &g(x)≤0
-\end{aligned}</script><p>对于这个问题先不看等式约束，画出不等式约束和目标函数关系图：<br><img src="assets/支持向量机模型-cb470b80.png" alt="不等式约束"><br>其中，阴影部分就是可行域，也就是说可行域从原来的一条线变成了一块区域。那么能取到极值点的地方可能有两种情况：<br>1、还是在 $h(x)$和等值线相切的地方<br>2、$f(x)$的极值点本身就在可行域里面。<br><img src="assets/支持向量机模型-97d4745a.png" alt="两种情况"><br>因为如果不是相切，那么，对任意一个在可行域中的点，如果在它附近往里走或者往外走，$f(x)$一般都会变大或者变小，所以绝大部分点都不会是极值点。除非这个点刚好在交界处，且和等值线相切；或者这个点在可行域内部，但是本身就是$f(x)$的极值点。<br>对于第一种情况，不等式约束就变成等式约束了，定义拉格朗日函数：</p>
+\\end{aligned}</script><p>对于这个问题先不看等式约束，画出不等式约束和目标函数关系图：</p>
+<p><img src="assets/支持向量机模型-cb470b80.png" alt="不等式约束"></p>
+<p>其中，阴影部分就是可行域，也就是说可行域从原来的一条线变成了一块区域。那么能取到极值点的地方可能有两种情况：<br>1、还是在 $h(x)$和等值线相切的地方<br>2、$f(x)$的极值点本身就在可行域里面。</p>
+<p><img src="assets/支持向量机模型-97d4745a.png" alt="两种情况"></p>
+<p>因为如果不是相切，那么，对任意一个在可行域中的点，如果在它附近往里走或者往外走，$f(x)$一般都会变大或者变小，所以绝大部分点都不会是极值点。除非这个点刚好在交界处，且和等值线相切；或者这个点在可行域内部，但是本身就是$f(x)$的极值点。<br>对于第一种情况，不等式约束就变成等式约束了，定义拉格朗日函数：</p>
 <script type="math/tex; mode=display">
 L(x,λ,μ)= f(x)+λh(x)+μg(x)</script><p>使用拉格朗日乘子法：</p>
 <script type="math/tex; mode=display">
-∇_x L(x,λ,μ)=0 \\
+∇\_x L(x,λ,μ)=0 \\
 h(x)=0 \\
 g(x)=0  \\
 μ≥0</script><p>这里需要解释一下，为什么是$μ≥0$。在“不等式约束”图中，问题的可行域是在$ g(x)≤0$一侧，而$g(x)$ 的梯度是指向大于 0 的一侧，也就是不是可行域的一侧。而求的问题是极小值，所以 $f(x)$ 在交点处的梯度是指向可行域的一侧，也就是说两个梯度一定是相反的。所以也就可以确定这里的系数一定是大于等于0的。而等式约束由于不知道$h(x)$ 的梯度方向，所以对它没有约束。<br>对于第二种情况，不等式约束就相当于没有，定义拉格朗日函数</p>
 <script type="math/tex; mode=display">
 L(x,λ)= f(x)+λh(x)</script><p>使用拉格朗日乘子法：</p>
 <script type="math/tex; mode=display">
-∇_x L(x,λ)=0 \\
+∇\_x L(x,λ)=0 \\
 h(x)=0 \\
 g(x)≤0 \\
 μ=0 \\</script><p>不同的是第一种情况有$g(x)=0$且$μ≥0$，第二种情况$g(x)≤0$且$μ=0$，综合两个问题可得：</p>
 <script type="math/tex; mode=display">
-∇_x L(x,λ,μ)=0 \\
+∇\_x L(x,λ,μ)=0 \\
 μg(x)=0 \\
 μ≥0 \\
 h(x)=0 \\
