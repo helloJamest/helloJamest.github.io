@@ -55,17 +55,13 @@ L(w,b,α)=  \frac{1}{2}{||w||}^2-\sum_{i=1}^N{α_iy_i (w·x_i+b)}+\sum_{i=1}^N{�
 \begin{aligned}
 w=\sum_{i=1}^N{α_i y_i x_i} \\
 \sum_{i=1}^N{α_i y_i}=0
-\end{aligned}</script><p>代入拉格朗日函数，1得</p>
+\end{aligned}</script><p>代入拉格朗日函数，得</p>
 <script type="math/tex; mode=display">
 \begin{aligned}
 L(w,b,α)=& \frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j+b)-\sum_{i=1}^N{α_i y_i ((\sum_{j=1}^N{α_j y_j x_j})·x_i+b)}+\sum_{i=1}^Nα_i \\
 =& -\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)+\sum_{i=1}^Nα_i
 \end{aligned}</script><p>即</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
-L(w,b,α) = & \frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j+b)-\sum_{i=1}^N{α_i y_i ((\sum_{j=1}^N{α_j y_j x_j})·x_i+b)}+\sum_{i=1}^Nα_i \\
-=& -\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)+\sum_{i=1}^Nα_i
-\end{aligned}</script><script type="math/tex; mode=display">
 \min_{w,b} L(w,b,α) = -\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N α_i α_j y_i y_j (x_i·x_j)+\sum_{i=1}^Nα_i</script><ul>
 <li><p>求$\min_{w,b} L(w,b,α)$对$α$的极大:</p>
 <script type="math/tex; mode=display">
