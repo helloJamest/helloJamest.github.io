@@ -52,8 +52,7 @@
 <ul>
 <li>其原始问题为：</li>
 </ul>
-<p>$$</p>
-<p>\begin{aligned}<br>\min_{w,b} \ \ \ \ &amp;\frac{1}{2}{||w||}^2+C\sum_{i=1}^{N}{ξ_i}  \\<br>s.t.\ \ \ \ \ &amp;y_i·(w·x_i+b)≥1-ξ_i，i=1,2,…,N \\<br>&amp;ξ_i≥0，i=1,2,…,N<br>\end{aligned}<br>$$</p>
+<p>$$<br>\begin{aligned}<br>\min_{w,b} \ \ \ \ &amp;\frac{1}{2}{||w||}^2+C\sum_{i=1}^{N}{ξ_i}  \\<br>s.t.\ \ \ \ \ &amp;y_i·(w·x_i+b)≥1-ξ_i，i=1,2,…,N \\<br>&amp;ξ_i≥0，i=1,2,…,N<br>\end{aligned}<br>$$</p>
 <p>构建拉格朗日函数：</p>
 <p>$$<br>\begin{aligned}<br>L(w,b,ξ,α,μ)=\frac{1}{2}{||w||}^2+C\sum_{i=1}^{N}{ξ<em>i}-\sum</em>{i=1}^N{α_i(y_i (w·x_i+b)-1+ξ<em>i)}-\sum</em>{i=1}^N{μ_i ξ_i}<br>\end{aligned}<br>$$</p>
 <p>求导后代入，得</p>
