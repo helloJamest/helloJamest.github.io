@@ -48,7 +48,7 @@ verbose=0,
 </ul>
 <h3 id="XGBoost"><a href="#XGBoost" class="headerlink" title="XGBoost"></a>XGBoost</h3><p><strong>Xgboost是GB算法的高效实现，xgboost中的基学习器除了可以是CART（gbtree）也可以是线性分类器（gblinear）。</strong></p>
 <ul>
-<li><strong>算法原理</strong><br>本部分主要参考陈天奇的<a href="https://xgboost.readthedocs.io/en/latest/tutorials/model.html" target="_blank" rel="noopener">introduction to xgboost</a>。<br>首先，模型的目标函数定义为：<br>$$<br>obj = \sum_{i=1}^n l(y_i,\hat{y}<em>i^{(t)})+\sum</em>{i=1}^t \Omega(f_i)<br>$$</li>
+<li><strong>算法原理</strong><br>本部分主要参考陈天奇的<a href="https://xgboost.readthedocs.io/en/latest/tutorials/model.html" target="_blank" rel="noopener">introduction to xgboost</a>。<br>首先，模型的目标函数定义为：<br>$$<br>obj = \sum_{i=1}^n l(y_i,\hat{y}<em>i^{(t)})+\sum</em>{i=1}^t(f_i)<br>$$</li>
 </ul>
 <p>$$<br>obj = \sum_{i=1}^n l(y_i, \hat{y}<em>i^{ (t) }) + \sum</em>{i=1}^t \Omega(f_i)<br>$$</p>
 <p>这个目标函数同样包含两部分，第一部分就是损失函数，第二部分就是正则项，这里的正则化项由K棵树的正则化项相加而来。<br>可以发现，我们需要学习的目标是$f_i$，包括每棵树的结构和各个叶子节点上的分数。<br>可以采用<strong>加法训练</strong>，目标不再是直接优化整个目标函数，而是分步骤优化目标函数，首先优化第一棵树，完了之后再优化第二棵树，直至优化完t棵树。整个过程如下所示：</p>
