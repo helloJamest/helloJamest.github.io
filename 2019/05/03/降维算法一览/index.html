@@ -15,18 +15,49 @@
 <li>其他方法：神经网络和聚类</li>
 </ul>
 <h1 id="PCA"><a href="#PCA" class="headerlink" title="PCA"></a>PCA</h1><p>PCA(Principal Component Analysis)，即主成分分析方法，是一种使用最广泛的数据降维算法。 <strong><font color="red">PCA通过线性变换将原始数据变换为一组各维度线性无关的表示，提取数据的主要特征分量，常用于高维数据的降维。</font></strong><br>PCA有两种通俗易懂的解释：(1)最大方差理论；(2)最小平方误差。下面主要从最大方差理论出发，推导出表达式</p>
-<h2 id="最大方差理论"><a href="#最大方差理论" class="headerlink" title="最大方差理论"></a>最大方差理论</h2><p>PCA的目标可认为是最大化投影方差，也就是让数据在主轴上投影的方差最大。<br>对于给定的一组数据点${v_1,v_2,…,v_n}$,其中所有向量均为列向量，对其进行中心化，表示为${x_1,x_2,…,x_n}$。可得向量$x_i$在$w$（单位方向向量）上的投影坐标可以表示为$(x_i,w)=x_i^T w$，因此我们的目标是找到一个投影方向$w$，使得${x_1,x_2,…,x_n}$在$w$上的投影方差尽可能大。因为投影之后的均值为0，因此方差可以表示为：<br>$$<br>\begin{aligned}<br>D(x)=&amp; \frac{1}{n} \sum_{i=1}^n (x_i^T w)^T x_i^T w \\<br>=&amp; \frac{1}{n} \sum_{i=1}^n w^T x_i {x_i}^T w \\<br>=&amp; w^T (\frac{1}{n} \sum_{i=1}^n x_i x_i^T)w<br>\end{aligned}<br>$$<br>其中，$\frac{1}{n} \sum_{i=1}^n x_i x_i^T$为样本协方差矩阵，令为$∑$，另外由于$w$是单位方向向量，即$w^T w=1$，因此目标可写作：<br>$$<br>\begin{cases}<br>\max{w^T\sum w} \\<br>s.t. w^T w=1<br>\end{cases}<br>$$<br>引入拉格朗日乘子，对$w$求导令其为0，可以推出$∑w=λw$，此时<br>$$<br>D(x)=w^T∑w=λw^T w=λ<br>$$<br>即，x投影后方差即协方差矩阵的特征值，最佳投影方向就是最大特征值对应的特征向量。次佳投影方向是第二大特征值对应的特征向量，以此类推，可得以下PCA的求解方法。</p>
+<h2 id="最大方差理论"><a href="#最大方差理论" class="headerlink" title="最大方差理论"></a>最大方差理论</h2><p>PCA的目标可认为是最大化投影方差，也就是让数据在主轴上投影的方差最大。<br>对于给定的一组数据点$\{v_1,v_2,…,v_n\}$,其中所有向量均为列向量，对其进行中心化，表示为$\{x_1,x_2,…,x_n\}$。可得向量$x_i$在$w$（单位方向向量）上的投影坐标可以表示为$(x_i,w)=x_i^T w$，因此我们的目标是找到一个投影方向$w$，使得$\{x_1,x_2,…,x_n\}$在$w$上的投影方差尽可能大。因为投影之后的均值为0，因此方差可以表示为：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+D(x)=& \frac{1}{n} \sum_{i=1}^n (x_i^T w)^T x_i^T w \\
+=& \frac{1}{n} \sum_{i=1}^n w^T x_i {x_i}^T w \\
+=& w^T (\frac{1}{n} \sum_{i=1}^n x_i x_i^T)w
+\end{aligned}</script><p>其中，$\frac{1}{n} \sum_{i=1}^n x_i x_i^T$为样本协方差矩阵，令为$∑$，另外由于$w$是单位方向向量，即$w^T w=1$，因此目标可写作：</p>
+<script type="math/tex; mode=display">
+\begin{cases}
+\max\{w^T\sum w\} \\
+s.t. w^T w=1
+\end{cases}</script><p>引入拉格朗日乘子，对$w$求导令其为0，可以推出$∑w=λw$，此时</p>
+<script type="math/tex; mode=display">
+D(x)=w^T∑w=λw^T w=λ</script><p>即，x投影后方差即协方差矩阵的特征值，最佳投影方向就是最大特征值对应的特征向量。次佳投影方向是第二大特征值对应的特征向量，以此类推，可得以下PCA的求解方法。</p>
 <ol>
 <li>对样本数据进行 <strong>中心化处理</strong>。</li>
 <li>求样本 <strong>协方差矩阵</strong></li>
 <li>对协方差矩阵进行 <strong>特征值分解</strong>，将特征值从大到小排列</li>
-<li>取特征值前d大对应的特征向量$w_1,w_2,…,w_d$,通过以下映射将n维样本映射到d维<br>$$<br>{x_i}’=<br>\begin{bmatrix}<br>{w_1}^Tx_i\\<br>\vdots \\<br>{w_d}^Tx_i\\<br>\end{bmatrix}<br>$$<br>定义降维后信息占比为：<br>$$<br>\eta=\sqrt{ \frac{\sum_{i=1}^d{\lambda_i}^2}{ \sum_{i=1}^n{\lambda_i}^2 } }<br>$$</li>
+<li>取特征值前d大对应的特征向量$w_1,w_2,…,w_d$,通过以下映射将n维样本映射到d维<script type="math/tex; mode=display">
+{x_i}'=
+\begin{bmatrix}
+{w_1}^Tx_i\\
+\vdots \\
+{w_d}^Tx_i\\
+\end{bmatrix}</script>定义降维后信息占比为：<script type="math/tex; mode=display">
+\eta=\sqrt{ \frac{\sum_{i=1}^d{\lambda_i}^2}{ \sum_{i=1}^n{\lambda_i}^2 } }</script></li>
 </ol>
 <p>另外，由于得到协方差矩阵的特征值特征向量有两种方法：特征值分解协方差矩阵、奇异值分解协方差矩阵，所以PCA算法有两种实现方法：基于特征值分解协方差矩阵实现PCA算法、基于SVD分解协方差矩阵实现PCA算法。<br>现实场景下，一般使用SVD，它有两个好处：<br>1) 有一些SVD的实现算法可以先不求出协方差矩阵也能求出我们的右奇异矩阵V。也就是说，我们的PCA算法可以不用做特征分解而是通过SVD来完成，这个方法在样本量很大的时候很有效。实际上，scikit-learn的PCA算法的背后真正的实现就是用的SVD，而不是特征值分解。<br>2) 注意到PCA仅仅使用了我们SVD的左奇异矩阵，没有使用到右奇异值矩阵，那么右奇异值矩阵有什么用？左奇异矩阵可以用于对行数的压缩；右奇异矩阵可以用于对列(即特征维度)的压缩。这就是我们用SVD分解协方差矩阵实现PCA可以得到两个方向的PCA降维(即行和列两个方向)。</p>
 <p>PCA本质上是将方差最大的方向作为主要特征，并且在各个正交方向上将数据“离相关”，也就是让它们在不同正交方向上没有相关性。因此，PCA也存在一些限制，例如它可以很好的解除线性相关，但是对于高阶相关性就没有办法了，对于存在高阶相关性的数据，可以考虑Kernel PCA，通过Kernel函数将非线性相关转为线性相关，关于这点就不展开讨论了。另外，PCA假设数据各主特征是分布在正交方向上，如果在非正交方向上存在几个方差较大的方向，PCA的效果就大打折扣了。<br>最后需要说明的是，PCA是一种无参数技术，也就是说面对同样的数据，如果不考虑清洗，谁来做结果都一样，没有主观参数的介入，所以PCA便于通用实现，但是本身无法个性化的优化。</p>
-<h1 id="LDA"><a href="#LDA" class="headerlink" title="LDA"></a>LDA</h1><p>线性判别分析（Linear Discriminant Alalysis,LDA）是一种有监督学习算法，同时经常被用来对数据进行降维。<br><strong><font color="red">LDA的中心思想是最大化类间距离和最小化类内距离，即将数据在低维度上进行投影，投影后希望每一种类别数据的投影点尽可能的接近，而不同类别的数据的类别中心之间的距离尽可能的大。</font></strong><br>设有C1、C2两个类别的样本，两类的均值分别为$μ<em>1=\frac{1}{N} \sum</em>{x∈C_1} x$, $μ<em>2=\frac{1}{N} \sum</em>{x∈C_2} x$，则两类中心在w方向上的投影向量为$w^T μ_1$，$w^T μ_2$，因此类间距离为$||w^T (μ_1-μ_2 )||_2^2$；我们将类内方差定义为各个类分别的方差之和，将目标函数定义为类间距离和类内距离的比值，于是我们最大化的目标为：<br>$$<br>\max_w⁡ J(w)=\frac{||w^T (μ_1-μ_2 )||_2^2}{D_1+D_2}<br>$$<br>其中$w$为单位向量，$D_1$，$D_2$分别表示两类投影后的方差<br>$$<br>D_1=\sum_{x∈C_1}(w^T x-w^T μ<em>1)^2 =∑</em>{x∈C_1}w^T (x-μ_1)(x-μ_1)^T w<br>$$<br>$$<br>D_2=∑_{x∈C_2}w^T (x-μ_2)(x-μ_2)^T w<br>$$<br>因此，$J(w)$可写成<br>$$<br>J(w)=\frac{w^T (μ_1-μ_2)(μ_1-μ<em>2)^T w} {∑</em>{x∈C_i} {w^T (x-μ_i)(x-μ_i)^T w} }<br>$$</p>
-<p>于是，可得<br>$$<br>S_B w=λS_w w<br>$$<br>即<br>$$<br>S_w^{-1} S_B w=λw<br>$$</p>
-<p>即求矩阵特征向量问题。$J(w)$对应了矩阵$S_w^{-1} S_B$最大的特征值，而投影方向是这个特征值对应的特征向量。<br>LDA在降维过程中可以使用类别的先验知识经验，在样本分类信息依赖均值而不是方差的时候，比PCA之类的算法较优。</p>
+<h1 id="LDA"><a href="#LDA" class="headerlink" title="LDA"></a>LDA</h1><p>线性判别分析（Linear Discriminant Alalysis,LDA）是一种有监督学习算法，同时经常被用来对数据进行降维。<br><strong><font color="red">LDA的中心思想是最大化类间距离和最小化类内距离，即将数据在低维度上进行投影，投影后希望每一种类别数据的投影点尽可能的接近，而不同类别的数据的类别中心之间的距离尽可能的大。</font></strong><br>设有C1、C2两个类别的样本，两类的均值分别为$μ_1=\frac{1}{N} \sum_{x∈C_1} x$, $μ_2=\frac{1}{N} \sum_{x∈C_2} x$，则两类中心在w方向上的投影向量为$w^T μ_1$，$w^T μ_2$，因此类间距离为$||w^T (μ_1-μ_2 )||_2^2$；我们将类内方差定义为各个类分别的方差之和，将目标函数定义为类间距离和类内距离的比值，于是我们最大化的目标为：</p>
+<script type="math/tex; mode=display">
+\max_w⁡ J(w)=\frac{||w^T (μ_1-μ_2 )||_2^2}{D_1+D_2}</script><p>其中$w$为单位向量，$D_1$，$D_2$分别表示两类投影后的方差</p>
+<script type="math/tex; mode=display">
+D_1=\sum_{x∈C_1}(w^T x-w^T μ_1)^2 =∑_{x∈C_1}w^T (x-μ_1)(x-μ_1)^T w</script><script type="math/tex; mode=display">
+D_2=∑_{x∈C_2}w^T (x-μ_2)(x-μ_2)^T w</script><p>因此，$J(w)$可写成</p>
+<script type="math/tex; mode=display">
+J(w)=\frac{w^T (μ_1-μ_2)(μ_1-μ_2)^T w} {∑_{x∈C_i} {w^T (x-μ_i)(x-μ_i)^T w} }</script><p>定义类间散度矩阵$S_B=(μ_1-μ_2)(μ_1-μ_2)^T$, 类内散度矩阵$S_w=∑_{x∈C_i}(x-μ_i)(x-μ_i)^T $，得</p>
+<script type="math/tex; mode=display">
+J(w)=\frac{w^T S_B w} {w^T S_w w}</script><p>于是，可得</p>
+<script type="math/tex; mode=display">
+S_B w=λS_w w</script><p>即</p>
+<script type="math/tex; mode=display">
+S_w^{-1} S_B w=λw</script><p>即求矩阵特征向量问题。$J(w)$对应了矩阵$S_w^{-1} S_B$最大的特征值，而投影方向是这个特征值对应的特征向量。<br>LDA在降维过程中可以使用类别的先验知识经验，在样本分类信息依赖均值而不是方差的时候，比PCA之类的算法较优。</p>
 <h2 id="PCA与LDA异同？"><a href="#PCA与LDA异同？" class="headerlink" title="PCA与LDA异同？"></a>PCA与LDA异同？</h2><p>相同点<br>1）两者均可以对数据进行降维。<br>2）两者在降维时均使用了矩阵特征分解的思想。<br>3）两者都假设数据符合高斯分布。<br>不同点<br>1）LDA是有监督的降维方法，而PCA是无监督的降维方法<br>2）LDA降维最多降到类别数k-1的维数，而PCA没有这个限制。<br>3）LDA除了可以用于降维，还可以用于分类。<br>4）LDA选择分类性能最好的投影方向，而PCA选择样本点投影具有最大方差的方向。</p>
 <h1 id="局部线性嵌入-（LLE）"><a href="#局部线性嵌入-（LLE）" class="headerlink" title="局部线性嵌入 （LLE）"></a>局部线性嵌入 （LLE）</h1><p>Locally linear embedding（LLE）是一种非线性降维算法，它能够使降维后的数据较好地保持原有流形结构 。LLE可以说是流形学习方法最经典的工作之一。很多后续的流形学习、降维方法都与LLE有密切联系。</p>
 <blockquote>
