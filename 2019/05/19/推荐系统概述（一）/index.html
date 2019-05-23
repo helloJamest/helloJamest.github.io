@@ -1,0 +1,147 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta name="generator" content="Hexo 3.8.0"><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description"><title>推荐系统概述（一） | Jamest</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=0.0.0"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/normalize/8.0.1/normalize.min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/pure-min.css"><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/pure/1.0.0/grids-responsive-min.css"><link rel="stylesheet" href="//lib.baomitu.com/font-awesome/4.7.0/css/font-awesome.min.css"><script type="text/javascript" src="//lib.baomitu.com/jquery/3.4.0/jquery.min.js"></script><link rel="icon" mask="" sizes="any" href="/favicon.ico"><link rel="Shortcut Icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">推荐系统概述（一）</h1><a id="logo" href="/.">Jamest</a><p class="description"></p></div><div id="nav-menu"><a class="current" href="/."><i class="fa fa-home"> Inicio</i></a><a href="/archives/"><i class="fa fa-archive"> Archivo</i></a><a href="/about/"><i class="fa fa-user"> Acerca de</i></a><a href="/atom.xml"><i class="fa fa-rss"> RSS</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post"><h1 class="post-title">推荐系统概述（一）</h1><div class="post-meta">May 19, 2019</div><div class="post-content"><p>推荐系统是一种信息过滤系统，用于预测用户对物品的评分或偏好。解决的是信息过载和长尾问题(长尾理论)。它的本质是通过一定的方式将用户和物品联系起来。<br>推荐系统在为用户推荐物品时通常有两种方式：<br>1.评分预测<br>2.TopN推荐</p>
+<p>主流的推荐系统算法可以分为协同过滤推荐（Collaborative Filtering Recommendation）、基于内容推荐（Content-basedRecommendation）和混合推荐等。<br><a id="more"></a></p>
+<h1 id="协同过滤"><a href="#协同过滤" class="headerlink" title="协同过滤"></a>协同过滤</h1><p>仅仅基于用户行为数据设计的推荐算法一般称为协同过滤算法。<br>主要包括基于邻域的方法（neighborhood-based）、 隐语义模型（latent factor model）、 基于图的随机游走算法（random walk on graph）等。而基于邻域的方法主要包含基于用户的协同过滤算法和基于物品的协同过滤算法。</p>
+<h2 id="1）基于用户的协同过滤算法"><a href="#1）基于用户的协同过滤算法" class="headerlink" title="1）基于用户的协同过滤算法"></a>1）基于用户的协同过滤算法</h2><p>基于用户的协同过滤算法主要包括两个步骤。<br>(1) 找到和目标用户兴趣相似的用户集合。<br>(2) 找到这个集合中的用户喜欢的，且目标用户没有听说过的物品推荐给目标用户<br>步骤(1)的关键就是计算两个用户的兴趣相似度。可以通过Jaccard(杰卡德)公式或者通过余弦相似度计算<br>Jaccard(杰卡德)公式:</p>
+<script type="math/tex; mode=display">
+W(u,v) = \frac{N(u) \bigcap N(v)}{N(u) \bigcup N(v)}</script><p>余弦相似度:</p>
+<script type="math/tex; mode=display">
+W(u,v) = \frac{N(u) \bigcap N(v)} {\sqrt{|N(u)|  |N(v)|}}</script><h2 id="2）基于物品的协同过滤算法"><a href="#2）基于物品的协同过滤算法" class="headerlink" title="2）基于物品的协同过滤算法"></a>2）基于物品的协同过滤算法</h2><p>基于物品的协同过滤（item-based collaborative filtering）算法是目前业界应用最多的算法。基于物品的协同过滤算法主要分为两步。<br>(1) 计算物品之间的相似度。<br>(2) 根据物品的相似度和用户的历史行为给用户生成推荐列表</p>
+<script type="math/tex; mode=display">
+w(i,j) = \frac{N(i) \bigcap N(j)} {\sqrt{|N(i)|  |N(j)|}}</script><ul>
+<li>改进</li>
+</ul>
+<p>协同过滤可能会带来马太效应，所以会有一些常见的改进方法。<br>基于用户的协同过滤主要改进在用户对物品的喜好程度上，比如惩罚对热门物品的喜好程度，增加喜好程度的时间衰减等方法；<br>基于物品的改进主要有物品中心化和用户中心化，即先分别减去物品、用户分数的均值，再进行相似度计算。</p>
+<blockquote>
+<p>UserCF和ItemCF的综合比较</p>
+</blockquote>
+<p>UserCF的推荐结果着重于反映和用户兴趣相似的小群体的热点，而ItemCF的推荐结果着重于维系用户的历史兴趣。换句话说， UserCF的推荐更社会化，反映了用户所在的小型兴趣群体中物品的热门程度，而ItemCF的推荐更加个性化，反映了用户自己的兴趣传承。<br>例如，UserCF适合用于新闻推荐；ItemCF适合用于图书、电子商务和电影网站。</p>
+<h2 id="3）隐语义模型"><a href="#3）隐语义模型" class="headerlink" title="3）隐语义模型"></a>3）隐语义模型</h2><p>核心思想是通过隐含特征(latent factor)联系用户兴趣和物品，找出潜在的主题和分类。LFM（latent factor model）通过如下公式计算用户u对物品i的兴趣：</p>
+<script type="math/tex; mode=display">
+Preference(u,i) = r_{ui} = {p_u}^T q_i = \sum_{f=1}^F p_{u,k} q_{i,k}</script><p>定义P矩阵是user-class矩阵，矩阵值$P_{ij}$表示的是user i对class j的兴趣度；Q矩阵式class-item矩阵，矩阵值Qij表示的是item j在class i中的权重，权重越高越能作为该类的代表。那么，用户U对物品I的兴趣度为：</p>
+<script type="math/tex; mode=display">
+R_{UI} = P_U Q_I = \sum_{k=1}^K P_{U,K} Q_{K,I}</script><p>使用LFM后，我们不需要关心分类的角度，结果都是基于用户行为统计自动聚类的;不需要关心分类粒度的问题，通过设置LFM的最终分类数就可控制粒度，分类数越大，粒度约细<br>在user-item集K={(U,I)}，其中如果(U,I)是正样本，则RUI=1，否则RUI=0。损失函数如下所示：</p>
+<script type="math/tex; mode=display">
+C = \sum (r_{u,i}-\hat{r_{u,i}})^2 = \sum (r_{u,i}-\sum_{k=1}^K p_{u,k} q_{k,i})^2+\lambda ||p_u||^2 + \lambda ||q_i||^2</script><p>对$p_{u,k}$,$q_{k,i})$分别求偏导数，根据随机梯度下降法，将参数沿着最速下降方向向前推进</p>
+<ul>
+<li>优缺点</li>
+</ul>
+<p>优点：</p>
+<ol>
+<li>LFM具有比较好的理论基础</li>
+<li>LFM大量节省了训练过程中的内存</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>很难实现实时的推荐。经典的LFM模型每次训练时都需要扫描所有的用户行为记录，这样才能计算出用户隐类向量和物品隐类向量。而且LFM的训练需要在用户行为记录上反复迭代才能获得比较好的性能；</li>
+<li>LFM无法提供很好的推荐解释</li>
+</ol>
+<h2 id="4）基于随机游走的PersonalRank算法"><a href="#4）基于随机游走的PersonalRank算法" class="headerlink" title="4）基于随机游走的PersonalRank算法"></a>4）基于随机游走的PersonalRank算法</h2><p>将用户行为表示为二分图模型。假设给用户u进行个性化推荐，要计算所有节点相对于用户u的相关度，则PersonalRank从用户u对应的节点开始游走，每到一个节点都以1-d的概率停止游走并从u重新开始，或者以d的概率继续游走，从当前节点指向的节点中按照均匀分布随机选择一个节点往下游走。这样经过很多轮游走之后，每个顶点被访问到的概率也会收敛趋于稳定，这个时候我们就可以用概率来进行排名了。<br>在执行算法之前，我们需要初始化每个节点的初始概率值。如果我们对用户u进行推荐，则令u对应的节点的初始访问概率为1，其他节点的初始访问概率为0，然后再使用迭代公式计算。</p>
+<script type="math/tex; mode=display">
+PR(i)=(1-d)r_i+d\sum_{j \in in(i)} \frac {PR(j)}{|out(i)|} \\
+r_i =
+\begin{cases}
+1 \ \ i=u \\
+0 \ \ i!=u
+\end{cases}</script><p>算法优化方法：<br>(1)三分图（user，tag，item）<br>(2)转移矩阵算法，降低时间复杂度<br>矩阵化实现：</p>
+<script type="math/tex; mode=display">
+r = (1-\alpha)r_o + \alpha M^T r</script><p>其中，r是m+n行，1列的矩阵，每一行代表该顶点对固定顶点的PR值；是m+n行，1列的矩阵，负责选取某一个顶点作为固定顶点，其数值只有1行为1，其余为0。M是m+n行，m+n列的矩阵，是转移矩阵，其值$M_{ij}=\frac{1}{out(i)},j \in out(i) \ else \ 0$,即为顶点的出度倒数，若没有连接边则为0。上式可转换为：</p>
+<script type="math/tex; mode=display">
+r = (E-\alpha M^T)^{-1}(1-\alpha)r_o</script><p>其中，$(E-\alpha M^T)^{-1}$可以看做所有顶点的推荐结果，每一列代表一个顶点项，对该顶点的PR值。</p>
+<ul>
+<li>特点：</li>
+</ul>
+<ol>
+<li>主题无关性</li>
+<li>对新物品不利</li>
+</ol>
+<h2 id="5）Slope-One算法"><a href="#5）Slope-One算法" class="headerlink" title="5）Slope One算法"></a>5）Slope One算法</h2><p>Slope One 算法 是一种基于评分的预测算法, 本质上也是一种基于项目的算法。与一般的基于项目的算法不同, 该算法不计算项目之间的相似度, 而是用一种简单的线性回归模型进行预测（可以扩展） 算法易于实现, 计算速度快, 可扩展性好, 同时对数据稀疏性有较好的适应性。<br>主要两步：<br>Step1:计算物品之间的评分差的均值，记为物品间的评分偏差(两物品同时被评分)；<br>Step2:根据物品间的评分偏差和用户的历史评分，预测用户对未评分的物品的评分。<br>该算法适用于物品更新不频繁，数量相对较稳定并且物品数目明显小于用户数的场景。依赖用户的用户行为日志和物品偏好的相关内容。</p>
+<ul>
+<li>优缺点</li>
+</ul>
+<p>优点：</p>
+<ol>
+<li>算法简单，易于实现，执行效率高；</li>
+<li>可以发现用户潜在的兴趣爱好；</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>依赖用户行为，存在冷启动问题和稀疏性问题。</li>
+</ol>
+<blockquote>
+<p>协同过滤算法优缺点：</p>
+<ol>
+<li>协同过滤算法只是使用“用户”和“物品”两个变量，并且只是根据相似性这个变量计算，是基于统计的低阶推荐算法，不具有精准推荐</li>
+<li>对于新物品的曝光，协同过滤效果很差</li>
+</ol>
+</blockquote>
+<h1 id="内容推荐"><a href="#内容推荐" class="headerlink" title="内容推荐"></a>内容推荐</h1><p>它的思想非常简单：根据用户过去喜欢的物品（本文统称为 item），为用户推荐和他过去喜欢的物品相似的物品。而关键就在于这里的物品相似性的度量，这才是算法运用过程中的核心。<br>CB的过程一般包括以下三步：<br>物品表示（Item Representation）：为每个item抽取出一些特征（也就是item的content了）来表示此item；<br>特征学习（Profile Learning）：利用一个用户过去喜欢（及不喜欢）的item的特征数据，来学习出此用户的喜好特征（profile）；<br>生成推荐列表（Recommendation Generation）：通过比较上一步得到的用户profile与候选item的特征，为此用户推荐一组相关性最大的item。<br>CB的优点：</p>
+<ol>
+<li>用户之间的独立性（User Independence）：既然每个用户的profile都是依据他本身对item的喜好获得的，自然就与他人的行为无关。而CF刚好相反，CF需要利用很多其他人的数据。CB的这种用户独立性带来的一个显著好处是别人不管对item如何作弊（比如利用多个账号把某个产品的排名刷上去）都不会影响到自己。</li>
+<li>好的可解释性（Transparency）：如果需要向用户解释为什么推荐了这些产品给他，你只要告诉他这些产品有某某属性，这些属性跟你的品味很匹配等等。</li>
+<li>新的item可以立刻得到推荐（New Item Problem）：只要一个新item加进item库，它就马上可以被推荐，被推荐的机会和老的item是一致的。而CF对于新item就很无奈，只有当此新item被某些用户喜欢过（或打过分），它才可能被推荐给其他用户。所以，如果一个纯CF的推荐系统，新加进来的item就永远不会被推荐:( 。<br>CB的缺点：</li>
+<li>item的特征抽取一般很难（Limited Content Analysis）：如果系统中的item是文档（如个性化阅读中），那么我们现在可以比较容易地使用信息检索里的方法来“比较精确地”抽取出item的特征。但很多情况下我们很难从item中抽取出准确刻画item的特征，比如电影推荐中item是电影，社会化网络推荐中item是人，这些item属性都不好抽。其实，几乎在所有实际情况中我们抽取的item特征都仅能代表item的一些方面，不可能代表item的所有方面。这样带来的一个问题就是可能从两个item抽取出来的特征完全相同，这种情况下CB就完全无法区分这两个item了。比如如果只能从电影里抽取出演员、导演，那么两部有相同演员和导演的电影对于CB来说就完全不可区分了。</li>
+<li>无法挖掘出用户的潜在兴趣（Over-specialization）：既然CB的推荐只依赖于用户过去对某些item的喜好，它产生的推荐也都会和用户过去喜欢的item相似。如果一个人以前只看与推荐有关的文章，那CB只会给他推荐更多与推荐相关的文章，它不会知道用户可能还喜欢数码。</li>
+<li>无法为新用户产生推荐（New User Problem）：新用户没有喜好历史，自然无法获得他的profile，所以也就无法为他产生推荐了。当然，这个问题CF也有。</li>
+</ol>
+<h1 id="矩阵分解"><a href="#矩阵分解" class="headerlink" title="矩阵分解"></a>矩阵分解</h1><p>矩阵分解乃是实现隐语义模型的基石。<br>矩阵分解根据用户对物品的评分, 推断出用户和物品的隐语义向量, 然后根据用户和物品的隐语义向量来进行推荐。<br>推荐系统用到的数据可以有显式评分和隐式评分. 显式评分时用户对物品的打分, 显式评分矩阵通常非常稀疏. 隐式评分是指用户的浏览, 购买, 搜索等历史记录, 表示的是用户行为的有无, 所以是一个密集矩阵。<br>矩阵分解也有FunkSVD,BiasSVD,SVD++等常用形式，三种形式的差别就是在不同的预置Bias做了不同考虑</p>
+<h2 id="1）传统的奇异值分解SVD"><a href="#1）传统的奇异值分解SVD" class="headerlink" title="1）传统的奇异值分解SVD"></a>1）传统的奇异值分解SVD</h2><p>奇异值分解(SVD)原理与主要应用在数据降维中，可以将这个用户物品对应的m×n矩阵M进行SVD分解，并通过选择部分较大的一些奇异值来同时进行降维<br>API:<br>sklearn.decomposition.  import  TruncatedSVD<br>问题：<br>1.基于稠密向量分解，稀疏向量无法计算<br>2.O(n^3)的计算计算复杂度，计算复杂，智能用在简单数据降维，不可用在大数据推荐</p>
+<h2 id="2）FunkSVD推荐算法-LFM算法"><a href="#2）FunkSVD推荐算法-LFM算法" class="headerlink" title="2）FunkSVD推荐算法/LFM算法"></a>2）FunkSVD推荐算法/LFM算法</h2><p>ALS是交替最小二乘的简称，在机器学习上下文中，ALS特指使用交替最小二乘求解的一个协同过滤推荐算法。它通过观察到的所有用户给物品的打分，来推断每个用户的喜好并向用户推荐合适的物品。例如：将用户(user)对商品(item)的评分矩阵分解为两个矩阵：一个是用户对商品隐含特征的偏好矩阵，另一个是商品所包含的隐含特征的矩阵。在这个矩阵分解的过程中，评分缺失项得到了填充，也就是说我们可以基于这个填充的评分来给用户最商品推荐了。<br>API:pyspark.mllib.recommendation  import ALS<br>说明：<br>1,利用了梯度下降求解，考虑了正则化过拟合<br>2.没解决样本偏差</p>
+<h2 id="3）BiasSVD推荐算法："><a href="#3）BiasSVD推荐算法：" class="headerlink" title="3）BiasSVD推荐算法："></a>3）BiasSVD推荐算法：</h2><p>在LFM中提到的$\hat{r_{u,i}}$中加入偏置项,即得到SVD模型。</p>
+<script type="math/tex; mode=display">
+\hat{r_{u,i}}=\sum_{k=1}^K p_{u,k}q_{k,i} + \mu +b_u +b_i</script><p>其中$\mu$表示训练集中物品的所有评分的平均值，$b_u$是用户偏置项，表示一个用户评分的平均值，$b_i$是物品偏置项，表示一个物品被评分的平均值。偏置项是固有属性，每个用户和物品都有自己的值，代表该物品被大众喜爱程度或某个用户对物品的苛刻程度。<br>新的代价函数为：</p>
+<script type="math/tex; mode=display">
+C = \sum (r_{u,i}-\hat{r_{u,i}})^2 = \sum (r_{u,i}-\sum_{k=1}^K p_{u,k} q_{k,i})^2+\lambda ||b_u||^2 + \lambda ||b_i||^2</script><p>通过随机梯度下降，可以得到</p>
+<script type="math/tex; mode=display">
+\frac{\partial C}{\partial b_u} = r_{u,i} - \hat{r{u,i}} -\lambda * b_u \\
+\frac{\partial C}{\partial b_i} = r_{u,i} - \hat{r{u,i}} -\lambda * b_i</script><p>说明：<br>1，利用了梯度下降求解，正在了正则化，增加了偏置项<br>2，没有解决反馈回执</p>
+<h2 id="4）SVD"><a href="#4）SVD" class="headerlink" title="4）SVD++"></a>4）SVD++</h2><p>SVD++算法就是在BiasSVD算法上进一步做优化，增加考虑用户的隐式反馈。</p>
+<p>我们从上一步的BiasLFM(即SVD)继续演化就可以得到SVD++。SVD++在前面的基础上增加了隐式反馈和用户属性等基本信息，在学习的过程中又多了两个向量：隐式反馈的物品向量，用户属性的特征向量。<br>假设某个用户对某个物品进行了评分，这样的行为事实上蕴含了一定的信息，从侧面反映了用户的喜好，可以将这样的反映通过隐式参数的形式体现在模型中，从而得到一个更为精细的模型</p>
+<script type="math/tex; mode=display">
+\hat{r_{u,i}}=\mu +b_u +b_i+q_i^T(p_u+|I_u|^{-\frac{1}{2}} \sum_{j \in I_u}y_j)</script><p>其中$I_u$是该用户评价过的所有物品的集合，$y_j$是隐藏的评价了物品j反映出的个人喜好偏置。收缩因子取集合大小的根号是一个经验公式，并没有理论依据。<br>说明：<br>1，利用了梯度下降求解，正在了正则化，增加了偏置项，增加了反馈回执<br>2，没有解决时间序列的额权重衰减</p>
+<h2 id="5）Time-SVD"><a href="#5）Time-SVD" class="headerlink" title="5）Time SVD++"></a>5）Time SVD++</h2><p>TIME SVD ++: 添加了时间动态<br>时间序列这个会引起两个状态变化：<br>①：物品的流行度或者是随时间的变化程度，原则大部分是会随时间衰减的，因为人的审美随时间变化，当然，没有随时间变化的那部分我们都称呼为“经典款”<br>②：人的评分标准也是随时间变化的，比如年轻时要求更严格，中年会更随和，年老会更和蔼。<br>③：同一天的人的审美变化应该不会有太大变化，有变化也是轻微的变化。<br>说明：<br>1，利用了梯度下降求解，正在了正则化，增加了偏置项，增加了反馈回执<br>2，解决了时间序列的额权重衰减</p>
+<h2 id="矩阵分解优劣势"><a href="#矩阵分解优劣势" class="headerlink" title="矩阵分解优劣势"></a>矩阵分解优劣势</h2><p>主要的优势如下：</p>
+<ol>
+<li>比较容易编程实现，随机梯度下降方法依次迭代即可训练出模型。</li>
+<li>预测的精度比较高，预测准确率要高于基于领域的协同过滤以及基于内容CBR等方法。</li>
+<li>比较低的时间和空间复杂度，高维矩阵映射为两个低维矩阵节省了存储空间，训练过程比较费时，但是可以离线完成；评分预测一般在线计算，直接使用离线训练得到的参数，可以实时推荐。</li>
+<li>非常好的扩展性，如由SVD拓展而来的SVD++和 TIME SVD++。</li>
+</ol>
+<p>矩阵分解的不足主要有：</p>
+<ol>
+<li>训练模型较为费时。</li>
+<li>推荐结果不具有很好的可解释性，无法用现实概念给分解出来的用户和物品矩阵的每个维度命名，只能理解为潜在语义空间。</li>
+</ol>
+<h1 id="关联规则"><a href="#关联规则" class="headerlink" title="关联规则"></a>关联规则</h1><p>关联分析又称关联挖掘，就是在交易数据、关系数据或其他信息载体中，查找存在于项目集合或对象集合之间的频繁模式、关联、相关性或因果结构。或者说，关联分析是发现交易数据库中不同商品（项）之间的联系。关联分析的一个典型例子是购物篮分析。该过程通过发现顾客放人其购物篮中的不同商品之间的联系，分析顾客的购买习惯。通过了解哪些商品频繁地被顾客同时购买，这种关联的发现可以帮助零售商制定营销策略。其他的应用还包括价目表设计、商品促销、商品的排放和基于购买模式的顾客划分。<br>常用的关联规则算法有Apripri、FP-Tree算法，这样的算法也是基于统计模型的。同样使用“支持度”的指标做依据，只不过后者建立了项目表和权重书模型来处理，加速了扫描判别的磁盘IO。</p>
+<p>常用的频繁项集的评估标准有支持度,置信度和提升度三个</p>
+<ul>
+<li>支持度：几个关联的数据在数据集中出现的次数占总数据集的比重<script type="math/tex; mode=display">
+support(X=>Y) = \frac{\sigma(X \bigcap Y)}{N}</script></li>
+<li>置信度：一个数据出现后，另一个数据出现的概率，或者说数据的条件概率。<script type="math/tex; mode=display">
+confidence(X=>Y) = \frac{\sigma(X \bigcap Y)}{\sigma(X)}</script></li>
+<li>提升度：表示含有Y的条件下，同时含有X的概率，与X总体发生的概率之比<script type="math/tex; mode=display">
+lift(X=>Y) = \frac{confidence(X=>Y)}{P(Y)}</script></li>
+</ul>
+<h2 id="1-Apriori算法"><a href="#1-Apriori算法" class="headerlink" title="1)Apriori算法"></a>1)Apriori算法</h2><p>该算法主要包含两个步骤：首先找出数据集中所有的频繁项集，这些项集出现的频繁性要大于或等于最小支持度；然后根据频繁项集产生强关联规则，这些规则必须满足最小支持度和最小置信度。<br>算法原理：<br>如果一个项集是频繁项集，则它的所有子集都是频繁项集<br>如果一个集合不是频繁项集，则它的所有父集（超集）都不是频繁项集<br>关联分析的目标：<br>发现频繁项集：发现满足最小支持度的所有项集<br>发现关联规则：从频繁项集中提取所有高置信度的规则<br>Apriori算法采用了迭代的方法<br>1.先搜索出候选1项集及对应的支持度，剪枝去掉低于支持度的1项集，得到频繁1项集。<br>2.对剩下的频繁1项集进行连接，得到候选的频繁2项集，筛选去掉低于支持度的候选频繁2项集，得到真正的频繁二项集，<br>3.以此类推，迭代下去，直到无法找到频繁k+1项集为止，对应的频繁k项集的集合即为算法的输出结果</p>
+<h2 id="2-FP-growth算法"><a href="#2-FP-growth算法" class="headerlink" title="2)FP-growth算法"></a>2)FP-growth算法</h2><p>在FP-growth算法中，通过两次扫描事务数据库，把每个事务所包含的频繁项目按其支持度降序压缩存储到FP—tree中。在以后发现频繁模式的过程中，不需要再扫描事务数据库，而仅在FP-Tree中进行查找即可，并通过递归调用FP-growth的方法来直接产生频繁模式，因此在整个发现过程中也不需产生候选模式。该算法克服了Apriori算法中存在的问颢．在执行效率上也明显好于Apriori算法。<br>FP-growth算法通过构建FP-tree来压缩事务数据库中的信息，从而更加有效地产生频繁项集。FP-tree其实是一棵前缀树，按支持度降序排列，支持度越高的频繁项离根节点越近，从而使得更多的频繁项可以共享前缀。</p>
+<h1 id="基于深度学习的召回算法"><a href="#基于深度学习的召回算法" class="headerlink" title="基于深度学习的召回算法"></a>基于深度学习的召回算法</h1><h2 id="1-item2vec"><a href="#1-item2vec" class="headerlink" title="1)item2vec"></a>1)item2vec</h2><p>item2vec将用户的行为序列转化成item组成的句子，模仿word2vec训练word embedding将item embedding。基本思想是把原来高维稀疏的表示方式(one_hot)映射到低维稠密的向量空间中，这样我们就可以用这个低维向量来表示该项目(电影)，进而通过计算两个低维向量之间的相似度来衡量两个项目之间的相似性。<br>embedding就是用一个低维的向量表示一个物体，可以是一个词，或是一个商品，或是一个电影等等。这个embedding向量的性质是能使距离相近的向量对应的物体有相近的含义<br>类似于Word2vec，item2vec有两种方式：CBOW和skip-gram模型。<br>CBOW使用的是词袋模型，模型的训练输入是某一个特征词的上下文相关的词对应的词向量，而输出就是这特定的一个词的词向量。<br>Skip-Gram模型和CBOW的思路是反着来的，即输入是特定的一个词的词向量，而输出是特定词对应的上下文词向量。</p>
+<p>word2vec有两种改进方法，一种是基于Hierarchical Softmax的，另一种是基于Negative Sampling的。<br>首先，对于从输入层到隐藏层的映射，没有采取神经网络的线性变换加激活函数的方法，而是采用简单的对所有输入词向量求和并取平均的方法。<br>第二个改进就是从隐藏层到输出的softmax层这里的计算量个改进。为了避免要计算所有词的softmax概率，word2vec采样了霍夫曼树来代替从隐藏层到输出softmax层的映射。<br>由于我们把之前所有都要计算的从输出softmax层的概率计算变成了一颗二叉霍夫曼树，那么我们的softmax概率计算只需要沿着树形结构进行就可以了。<br>和之前的神经网络语言模型相比，我们的霍夫曼树的所有内部节点就类似之前神经网络隐藏层的神经元,其中，根节点的词向量对应我们的投影后的词向量，而所有叶子节点就类似于之前神经网络softmax输出层的神经元，叶子节点的个数就是词汇表的大小。在霍夫曼树中，隐藏层到输出层的softmax映射不是一下子完成的，而是沿着霍夫曼树一步步完成的，因此这种softmax取名为”Hierarchical Softmax”。<br>如何“沿着霍夫曼树一步步完成”呢？在word2vec中，我们采用了二元逻辑回归的方法，即规定沿着左子树走，那么就是负类(霍夫曼树编码1)，沿着右子树走，那么就是正类(霍夫曼树编码0)。判别正类和负类的方法是使用sigmoid函数</p>
+<blockquote>
+<p>关于嵌入维度数量（New Embedding维度）的一般经验法则：embedding_dimensions =  number_of_categories**0.25</p>
+</blockquote>
+<ul>
+<li>优缺点<br>缺点：</li>
+</ul>
+<ol>
+<li>用户的行为序列时序性缺失</li>
+<li>用户行为序列中的item强度是无区分性的</li>
+</ol>
+<p>Item2Vec算法主流程</p>
+<ol>
+<li>从log中抽取用户行为序列</li>
+<li>将行为序列当成预料训练word2Vec得到item embedding</li>
+<li>得到item sim关系用于推荐</li>
+</ol>
+</div><div class="tags"><a href="/tags/Recommendation-System/">Recommendation System</a></div><div class="post-nav"><a class="next" href="/2019/05/14/概率图模型/">概率图模型</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"><input type="hidden" name="sitesearch" value="http://yoursite.com"></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Categorías</i></div></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Etiquetas</i></div><div class="tagcloud"><a href="/tags/algorithms/" style="font-size: 15px;">algorithms</a> <a href="/tags/machine-learning/" style="font-size: 15px;">machine learning</a> <a href="/tags/Recommendation-System/" style="font-size: 15px;">Recommendation System</a> <a href="/tags/Algorithm-practice/" style="font-size: 15px;">Algorithm practice</a> <a href="/tags/Books-Note/" style="font-size: 15px;">Books Note</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Recientes</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/05/19/推荐系统概述（一）/">推荐系统概述（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/概率图模型/">概率图模型</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/06/百面机器学习/">百面机器学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/聚类算法一览/">聚类算法一览</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/EM算法/">EM算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/降维算法一览/">降维算法一览</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/29/xgboost-lightgbm调参指南/">xgboost&lightgbm调参指南</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/24/集成学习/">集成学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/23/机器学习基础问题/">机器学习基础概念</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/23/决策树模型/">决策树模型</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Blogroll</i></div><ul></ul><a href="https://github.com/helloJamest" title="github" target="_blank">github</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2019 <a href="/." rel="nofollow">Jamest.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css"><script type="text/javascript" color="0,0,0" opacity="0.5" zindex="-2" count="50" src="//lib.baomitu.com/canvas-nest.js/2.0.3/canvas-nest.umd.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+  tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
+  });
+</script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
