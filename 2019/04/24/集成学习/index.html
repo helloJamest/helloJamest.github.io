@@ -3,18 +3,18 @@
 <ul>
 <li>特征选择<br>在随机森林中某个特征X的重要性的计算方法如下：<br>（1）对于随机森林中的每一颗决策树，使用相应的$OOB$(袋外)数据计算它的袋外数据误差，记为$errOOB1$。<br>（2）随机地对袋外数据所有样本的特征X加入噪声干扰（就可以随机的改变样本在特征X处的值），再次计算它的袋外数据误差，记为$errOOB2$。<br>（3）假设随机森林中有Ntree颗树，那么对于特征X的重要性$ =\sum\frac{err00B2-errOOB1}{Ntree}$,之所以可以用这个表达式来作为相应特征的重要性的度量值是因为：若给某个特征随机加入噪声之后，袋外的准确率大幅度下降，则说明这个特征对于样本的分类结果影响很大，也就是说它的重要程度比较高。</li>
 <li><p>sklearn-RandomForest参数<br>RandomForestClassifier(</p>
-<pre><code>      n_estimators=10,   //树的棵树
-      criterion=&#39;gini&#39;,      //分类标准
-      max_depth=None,  //最大深度
-       min_samples_split=2,  //最少分裂几个子节点
-       min_weight_fraction_leaf=0.0,
-      max_leaf_nodes=None,
-       bootstrap=True,
-      n_jobs=1,    //指定并行使用的进程数
-      random_state=None,
-      verbose=0,
-       warm_start=False,
-       class_weight=None  //类别权重，样本不均衡时很重要
+<pre><code>n_estimators=10,   //树的棵树
+criterion=&apos;gini&apos;,      //分类标准
+max_depth=None,  //最大深度
+ min_samples_split=2,  //最少分裂几个子节点
+ min_weight_fraction_leaf=0.0,
+max_leaf_nodes=None,
+ bootstrap=True,
+n_jobs=1,    //指定并行使用的进程数
+random_state=None,
+verbose=0,
+ warm_start=False,
+ class_weight=None  //类别权重，样本不均衡时很重要
 </code></pre><p>)</p>
 </li>
 <li><p><strong>RandomForest特点</strong><br>RF和Bagging对比：RF的起始性能较差，特别当只有一个基学习器时，随着学习器数目增多，随机森林通常会收敛到更低的泛化误差。随机森林的训练效率也会高于Bagging，因为在单个决策树的构建中，Bagging使用的是‘确定性’决策树，在选择特征划分结点时，要对所有的特征进行考虑，而随机森林使用的是‘随机性’特征数，只需考虑特征的子集。<br>优点：1、在数据集上表现良好，相对于其他算法有较大的优势（训练速度、预测准确度）；2、能够处理很高维的数据，并且不用特征选择，而且在训练完后，给出特征的重要性；3、容易做成并行化方法。<br>缺点：在噪声较大的分类或者回归问题上会过拟合。<br>对于不平衡数据集平衡误差是因为随机森林在损失函数里为不同的类设置了不同的权重。就是代价敏感 样本数目比较少的类设置更高的权重，也就是更高的错误惩罚，样本多的反之。</p>
@@ -30,24 +30,11 @@
 <li><p><strong>优点和缺点</strong><br>优点：<br>1、Adaboost提供一种框架，在框架内可以使用各种方法构建子分类器。可以使用简单的弱分类器，不用对特征进行筛选，也不存在过拟合的现象。<br>2、Adaboost算法不需要弱分类器的先验知识，最后得到的强分类器的分类精度依赖于所有弱分类器。无论是应用于人造数据还是真实数据，Adaboost都能显著的提高学习精度。<br>3、Adaboost算法不需要预先知道弱分类器的错误率上限，且最后得到的强分类器的分类精度依赖于所有弱分类器的分类精度，可以深挖分类器的能力。Adaboost可以根据弱分类器的反馈，自适应地调整假定的错误率，执行的效率高。<br>缺点：<br>1、在Adaboost训练过程中，Adaboost会使得难于分类样本的权值呈指数增长，训练将会过于偏向这类困难的样本，导致Adaboost算法易受噪声干扰。<br>2、Adaboost依赖于弱分类器，而弱分类器的训练时间往往很长。</p>
 </li>
 </ul>
-<h3 id="GBDT"><a href="#GBDT" class="headerlink" title="GBDT"></a>GBDT</h3><p><strong>GBDT是通过采用加法模型（即基函数的线性组合），以及不断减小训练过程产生的残差来达到将数据分类或者回归的算法。</strong><br>GBDT与传统的Boosting区别较大，它的每一次计算都是为了减少上一次的残差，而 <font color="red">为了消除残差，我们可以在残差减小的梯度方向上建立模型</font>,所以说，在GradientBoost中，每个新的模型的建立是为了使得之前的模型的残差往梯度下降的方法，与传统的Boosting中关注正确错误的样本加权有着很大的区别。<br>弱分类器一般会选择为CART TREE（也就是分类回归树）。由于Boosting框架对于高偏差和简单的要求，每个分类回归树的深度不会很深。最终的总分类器是将每轮训练得到的弱分类器加权求和得到的（也就是加法模型）。<br>  模型最终可以描述为：</p>
-<script type="math/tex; mode=display">
-  F_m(x)=\sum_{m=1}^{M}T(x;\theta_m)</script><p>  模型一共训练M轮，每轮产生一个弱分类器$T(x;\theta_m)$。弱分类器的损失函数</p>
-<script type="math/tex; mode=display">
-  \hat\theta_m=\arg_{\theta_m}min\sum_{i=1}^NL(y_i,F_{m-1}(x_i)+T(x_i;\theta_m))</script><p>$F_{m−1}(x)$为当前的模型，GBDT 通过经验风险极小化来确定下一个弱分类器的参数。具体到损失函数本身的选择也就是L的选择，有平方损失函数，0-1损失函数，对数损失函数等等。如果我们选择平方损失函数，那么这个差值其实就是我们平常所说的残差。<br> 利用损失函数的负梯度在当前模型的值作为回归问题提升树算法中的残差的近似值去拟合一个回归树。GBDT 每轮迭代的时候，都去拟合损失函数在当前模型下的负梯度。这样每轮训练的时候都能够让损失函数尽可能快的减小，尽快的收敛达到局部最优解或者全局最优解。</p>
+<h3 id="GBDT"><a href="#GBDT" class="headerlink" title="GBDT"></a>GBDT</h3><p><strong>GBDT是通过采用加法模型（即基函数的线性组合），以及不断减小训练过程产生的残差来达到将数据分类或者回归的算法。</strong><br>GBDT与传统的Boosting区别较大，它的每一次计算都是为了减少上一次的残差，而 <font color="red">为了消除残差，我们可以在残差减小的梯度方向上建立模型</font>,所以说，在GradientBoost中，每个新的模型的建立是为了使得之前的模型的残差往梯度下降的方法，与传统的Boosting中关注正确错误的样本加权有着很大的区别。<br>弱分类器一般会选择为CART TREE（也就是分类回归树）。由于Boosting框架对于高偏差和简单的要求，每个分类回归树的深度不会很深。最终的总分类器是将每轮训练得到的弱分类器加权求和得到的（也就是加法模型）。<br>  模型最终可以描述为：<br>  $$<br>  F_m(x)=\sum_{m=1}^{M}T(x;\theta_m)<br>  $$<br>  模型一共训练M轮，每轮产生一个弱分类器$T(x;\theta_m)$。弱分类器的损失函数<br>  $$<br>  \hat\theta_m=\arg_{\theta_m}min\sum_{i=1}^NL(y_i,F_{m-1}(x_i)+T(x_i;\theta_m))<br>  $$<br>$F_{m−1}(x)$为当前的模型，GBDT 通过经验风险极小化来确定下一个弱分类器的参数。具体到损失函数本身的选择也就是L的选择，有平方损失函数，0-1损失函数，对数损失函数等等。如果我们选择平方损失函数，那么这个差值其实就是我们平常所说的残差。<br> 利用损失函数的负梯度在当前模型的值作为回归问题提升树算法中的残差的近似值去拟合一个回归树。GBDT 每轮迭代的时候，都去拟合损失函数在当前模型下的负梯度。这样每轮训练的时候都能够让损失函数尽可能快的减小，尽快的收敛达到局部最优解或者全局最优解。</p>
 <ul>
 <li><strong>GBDT常用损失函数</strong><ul>
-<li>GBDT分类算法的损失函数<br>（a）指数损失函数（其实就是Adaboost算法），损失函数表达式为：<script type="math/tex; mode=display">
-L(y,f(x))=\exp(-yf(x))</script>（b）对数损失函数，分为二元分类和多元分类两种</li>
-<li>GBDT回归算法的损失函数<br>（a）均方差，最常用，损失函数表达式为：<script type="math/tex; mode=display">
-L(y,f(x))=(y-f(x))^2</script>（b）绝对损失，损失函数表达式为：<script type="math/tex; mode=display">
-L(y,f(x))=|y-f(x))|</script>对应负梯度误差为：<script type="math/tex; mode=display">
-sign(y_i-f(x_i))</script>(c) Huber损失，它是均方差和绝对损失的折衷产物，对于远离中心的异常点，采用绝对损失，而中心附近的点采用均方差。这个界限一般用分位数点度量。损失函数如下：<script type="math/tex; mode=display">L(y,f(x))=
-\begin{cases}
-\frac{1}{2}(y-f(x))^2& {|y-f(x)|\leq {\delta} } \\
-\delta(|y-f(x)|-\frac{\delta}{2})& {|y-f(x)|>\delta}
-\end{cases}</script>(d) 分位数损失，它对应的是分位数回归的损失函数，表达式为：<script type="math/tex; mode=display">
-L(y,f(x))=\sum_{y \geq f(x)}\theta|y-f(x)|+\sum_{y<f(x)}(1-\theta)|y-f(x)|</script><blockquote>
+<li>GBDT分类算法的损失函数<br>（a）指数损失函数（其实就是Adaboost算法），损失函数表达式为：<br>$$<br>L(y,f(x))=\exp(-yf(x))<br>$$<br>（b）对数损失函数，分为二元分类和多元分类两种</li>
+<li>GBDT回归算法的损失函数<br>（a）均方差，最常用，损失函数表达式为：<br>$$<br>L(y,f(x))=(y-f(x))^2<br>$$<br>（b）绝对损失，损失函数表达式为：<br>$$<br>L(y,f(x))=|y-f(x))|<br>$$<br>对应负梯度误差为：<br>$$<br>sign(y_i-f(x_i))<br>$$<br>(c) Huber损失，它是均方差和绝对损失的折衷产物，对于远离中心的异常点，采用绝对损失，而中心附近的点采用均方差。这个界限一般用分位数点度量。损失函数如下：<br>$$L(y,f(x))=<br>\begin{cases}<br>\frac{1}{2}(y-f(x))^2&amp; {|y-f(x)|\leq {\delta} } \\<br>\delta(|y-f(x)|-\frac{\delta}{2})&amp; {|y-f(x)|&gt;\delta}<br>\end{cases}$$<br>(d) 分位数损失，它对应的是分位数回归的损失函数，表达式为：<br>$$<br>L(y,f(x))=\sum_{y \geq f(x)}\theta|y-f(x)|+\sum_{y&lt;f(x)}(1-\theta)|y-f(x)|<br>$$<blockquote>
 <p>对于Huber损失和分位数损失，主要用于健壮回归，也就是减少异常点对损失函数的影响。</p>
 </blockquote>
 </li>
@@ -55,12 +42,7 @@ L(y,f(x))=\sum_{y \geq f(x)}\theta|y-f(x)|+\sum_{y<f(x)}(1-\theta)|y-f(x)|</scri
 </li>
 </ul>
 <ul>
-<li><strong>损失函数最小化方法</strong><br>1）指数函数<br>当损失函数为指数函数时，比如AdaBoost算法的损失函数是指数函数，这时通过 <strong>前向分步算法</strong>来解决。<br>前向分布算法在每轮迭代时，通过将上一轮所生成的模型所产生的损失函数最小化的方法来计算当前模型的参数。<strong>指数损失仅能用于二分类的情况。</strong><br>2）对数损失函数<br>对于二元GBDT，如果用类似于逻辑回归的对数似然损失函数，则损失函数为：<script type="math/tex; mode=display">
-L(y,f(x)) = log(1+\exp(-yf(x)))</script>其中$y∈\{−1,+1\}$。则此时的负梯度误差为<script type="math/tex; mode=display">
--\frac{\partial L(y,f(x_i))}{\partial f(x_i)}=\frac{y_i}{1+\exp(y_if(x_i))}</script>多元GBDT要比二元GBDT复杂一些，对应的是多元逻辑回归和二元逻辑回归的复杂度差别。假设类别数为K，则此时我们的对数似然损失函数为：<script type="math/tex; mode=display">
-L(y,f(x))=-\sum_{k=1}^K y_k\log{p_k(x)}</script>其中如果样本输出类别为k，则$y_k=1$。第k类的概率$p_k(x)$的表达式为：<script type="math/tex; mode=display">
-p_k(x)=\exp(f_k(x))/\sum_{l=1}^{K}\exp(f_l(x))</script>集合上两式，我们可以计算出第$t$轮的第$i$个样本对应类别$l$的负梯度误差为<script type="math/tex; mode=display">
--\frac{\partial L(y,f(x_i))}{\partial f(x_i)}=y_{il}-p_{l,t-1}(x_i)</script>观察上式可以看出，其实这里的误差就是样本$i$对应类别$l$的真实概率和$t−1$轮预测概率的差值。<br>除了负梯度计算和叶子节点的最佳负梯度拟合的线性搜索，多元GBDT分类和二元GBDT分类以及GBDT回归算法过程相同。<br>3）平方误差损失函数<br>在回归树提升算法中，遍历当前输入样例的可能取值，将每种可能值计算一遍损失函数，最终选择损失函数最小的值。<br>在计算平方损失误差时，可能出现残差项$（y-f_{m-1}(x)）$，此时可以通过如下方法来进行优化：每一轮迭代是为了减小上一步模型的残差，为了减少残差，每次在残差的负梯度方向建立一个新的模型，这样一步一步的使得残差越来越小。<br>4）一般损失函数<br>对于一般损失函数，可以通过梯度下降的方法来使得损失函数逐步减小，每次向损失函数的负梯度方向移动，直到损失函数值到达谷底。</li>
+<li><strong>损失函数最小化方法</strong><br>1）指数函数<br>当损失函数为指数函数时，比如AdaBoost算法的损失函数是指数函数，这时通过 <strong>前向分步算法</strong>来解决。<br>前向分布算法在每轮迭代时，通过将上一轮所生成的模型所产生的损失函数最小化的方法来计算当前模型的参数。<strong>指数损失仅能用于二分类的情况。</strong><br>2）对数损失函数<br>对于二元GBDT，如果用类似于逻辑回归的对数似然损失函数，则损失函数为：<br>$$<br>L(y,f(x)) = log(1+\exp(-yf(x)))<br>$$<br>其中$y∈{−1,+1}$。则此时的负梯度误差为<br>$$<br>-\frac{\partial L(y,f(x_i))}{\partial f(x_i)}=\frac{y_i}{1+\exp(y_if(x_i))}<br>$$<br>多元GBDT要比二元GBDT复杂一些，对应的是多元逻辑回归和二元逻辑回归的复杂度差别。假设类别数为K，则此时我们的对数似然损失函数为：<br>$$<br>L(y,f(x))=-\sum_{k=1}^K y_k\log{p_k(x)}<br>$$<br>其中如果样本输出类别为k，则$y_k=1$。第k类的概率$p_k(x)$的表达式为：<br>$$<br>p_k(x)=\exp(f_k(x))/\sum_{l=1}^{K}\exp(f_l(x))<br>$$<br>集合上两式，我们可以计算出第$t$轮的第$i$个样本对应类别$l$的负梯度误差为<br>$$<br>-\frac{\partial L(y,f(x_i))}{\partial f(x_i)}=y_{il}-p_{l,t-1}(x_i)<br>$$<br>观察上式可以看出，其实这里的误差就是样本$i$对应类别$l$的真实概率和$t−1$轮预测概率的差值。<br>除了负梯度计算和叶子节点的最佳负梯度拟合的线性搜索，多元GBDT分类和二元GBDT分类以及GBDT回归算法过程相同。<br>3）平方误差损失函数<br>在回归树提升算法中，遍历当前输入样例的可能取值，将每种可能值计算一遍损失函数，最终选择损失函数最小的值。<br>在计算平方损失误差时，可能出现残差项$（y-f_{m-1}(x)）$，此时可以通过如下方法来进行优化：每一轮迭代是为了减小上一步模型的残差，为了减少残差，每次在残差的负梯度方向建立一个新的模型，这样一步一步的使得残差越来越小。<br>4）一般损失函数<br>对于一般损失函数，可以通过梯度下降的方法来使得损失函数逐步减小，每次向损失函数的负梯度方向移动，直到损失函数值到达谷底。</li>
 <li><strong>优点和缺点</strong><br><font color="red">在Gradient Boosting算法中，关键就是利用损失函数的负梯度方向在当前模型的值作为残差的近似值，进而拟合一棵CART回归树。 </font><br>GBDT会累加所有树的结果，而这种累加是无法通过分类完成的，因此<strong>GBDT的树都是CART回归树</strong>，而不是分类树（尽管GBDT调整后也可以用于分类但不代表GBDT的树为分类树）。<br>GBDT的决策边界可能是很多条线。GBDT并不一定总是好于线性回归或逻辑回归。根据没有免费的午餐原则，没有一个算法是在所有问题上都能好于另一个算法的。根据奥卡姆剃刀原则，如果GBDT和线性回归或逻辑回归在某个问题上表现接近，那么我们应该选择相对比较简单的线性回归或逻辑回归。具体选择哪一个算法还是要根据实际问题来决定。<br>最后总结下GBDT的优缺点。<br>GBDT主要的优点有：<br>1.可以灵活处理各种类型的数据，包括连续值和离散值。<br>2.在相对少的调参时间情况下，预测的准确率也可以比较高。这个是相对SVM来说的。<br>3.使用一些健壮的损失函数，对异常值的鲁棒性非常强。比如 Huber损失函数和Quantile损失函数。<br>GBDT的主要缺点有：<br>1.由于弱学习器之间存在依赖关系，难以并行训练数据。不过可以通过自采样的SGBT来达到部分并行。</li>
 <li><strong>AdaBoost V.S. GBDT</strong><br>和AdaBoost一样，Gradient Boosting也是重复选择一个表现一般的模型并且每次基于先前模型的表现进行调整。不同的是，<strong>AdaBoost是通过提升错分数据点的权重来定位模型的不足而Gradient Boosting是通过算梯度（gradient）来定位模型的不足。</strong> 因此相比AdaBoost, Gradient Boosting可以使用更多种类的目标函数,而<strong>当目标函数是均方误差时，计算损失函数的负梯度值在当前模型的值即为残差。</strong><br>GBDT每一轮训练时所关注的重点是本轮产生结果的残差，下一轮以本轮残差作为输入，尽量去拟合这个残差，使下一轮输出的残差不断变小。所以GBDT可以做到每一轮一定向损失函数减小的梯度方向变化，而传统的boosting算法只能是尽量向梯度方向减小，这是GBDT与传统boosting算法最大的区别，这也是为什么GBDT相比传统boosting算法可以用更少的树个数与深度达到更好的效果。</li>
 </ul>
@@ -68,46 +50,14 @@ p_k(x)=\exp(f_k(x))/\sum_{l=1}^{K}\exp(f_l(x))</script>集合上两式，我们�
 <ul>
 <li><strong>算法原理</strong><br>本部分主要参考陈天奇的<a href="https://xgboost.readthedocs.io/en/latest/tutorials/model.html" target="_blank" rel="noopener">introduction to xgboost</a>。<br>首先，模型的目标函数定义为：</li>
 </ul>
-<script type="math/tex; mode=display">
-obj = \sum_{i=1}^n l( y_i, \hat{y}_i^{ (t) } ) + \sum_{i=1}^t \Omega(f_i)</script><p>这个目标函数同样包含两部分，第一部分就是损失函数，第二部分就是正则项，这里的正则化项由K棵树的正则化项相加而来。<br>可以发现，我们需要学习的目标是$f_i$，包括每棵树的结构和各个叶子节点上的分数。<br>可以采用<strong>加法训练</strong>，目标不再是直接优化整个目标函数，而是分步骤优化目标函数，首先优化第一棵树，完了之后再优化第二棵树，直至优化完t棵树。整个过程如下所示：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}
-\hat{y}_i^{(0)} &= 0\\
-\hat{y}_i^{(1)} &= f_1(x_i) = \hat{y}_i^{(0)} + f_1(x_i)\\
-\hat{y}_i^{(2)} &= f_1(x_i) + f_2(x_i)= \hat{y}_i^{(1)} + f_2(x_i)\\
-&\dots\\
-\hat{y}_i^{(t)} &= \sum_{k=1}^t f_k(x_i)= \hat{y}_i^{(t-1)} + f_t(x_i)
-\end{aligned}</script><p>在第t步时，我们添加了一棵最优的CART树$f_t$，这棵最优的CART树$f_t$是怎么得来的呢？非常简单，就是在现有的t-1棵树的基础上，使得目标函数最小的那棵CART树，如下所示：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}\text{obj}^{(t)} & = \sum_{i=1}^n l(y_i, \hat{y}_i^{(t)}) + \sum_{i=1}^t\Omega(f_i) \\
-          & = \sum_{i=1}^n l(y_i, \hat{y}_i^{(t-1)} + f_t(x_i)) + \Omega(f_t) + \mathrm{constant}\end{aligned}</script><p>其中constant就是前t-1棵树的复杂度,假如我们使用的损失函数时MSE，那么上述表达式会变成这个样子：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}\text{obj}^{(t)} & = \sum_{i=1}^n (y_i - (\hat{y}_i^{(t-1)} + f_t(x_i)))^2 + \sum_{i=1}^t\Omega(f_i) \\
-          & = \sum_{i=1}^n [2(\hat{y}_i^{(t-1)} - y_i)f_t(x_i) + f_t(x_i)^2] + \Omega(f_t) + \mathrm{constant}\end{aligned}</script><p>这个式子非常漂亮，因为它含有$f_t(x_i)$的一次式和二次式，而且一次式项的系数是残差。你可能好奇，为什么有一次式和二次式就漂亮，因为它会对我们后续的优化提供很多方便<br><strong>Note</strong>:$f_t(x_i)$是什么？它其实就是$f_t$某个叶子节点的值。之前我们提到过，叶子节点的值是可以作为模型的参数的。<br>对于其他的损失函数，我们未必能得出如此漂亮的式子，所以，对于一般的损失函数，我们需要将其作泰勒二阶展开，如下所示：</p>
-<script type="math/tex; mode=display">
-\text{obj}^{(t)} = \sum_{i=1}^n [l(y_i, \hat{y}_i^{(t-1)}) + g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t) + \mathrm{constant}</script><p>其中：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}g_i &= \partial_{\hat{y}_i^{(t-1)}} l(y_i, \hat{y}_i^{(t-1)})\\
-h_i &= \partial_{\hat{y}_i^{(t-1)}}^2 l(y_i, \hat{y}_i^{(t-1)})\end{aligned}</script><p>去除常数项，可得</p>
-<script type="math/tex; mode=display">
-\sum_{i=1}^n [g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t)</script><blockquote>
+<p>$$<br>obj = \sum_{i=1}^n l( y_i, \hat{y}<em>i^{ (t) } ) + \sum</em>{i=1}^t \Omega(f_i)<br>$$</p>
+<p>这个目标函数同样包含两部分，第一部分就是损失函数，第二部分就是正则项，这里的正则化项由K棵树的正则化项相加而来。<br>可以发现，我们需要学习的目标是$f_i$，包括每棵树的结构和各个叶子节点上的分数。<br>可以采用<strong>加法训练</strong>，目标不再是直接优化整个目标函数，而是分步骤优化目标函数，首先优化第一棵树，完了之后再优化第二棵树，直至优化完t棵树。整个过程如下所示：</p>
+<p>$$<br>\begin{aligned}<br>\hat{y}_i^{(0)} &amp;= 0\\<br>\hat{y}_i^{(1)} &amp;= f_1(x_i) = \hat{y}_i^{(0)} + f_1(x_i)\\<br>\hat{y}_i^{(2)} &amp;= f_1(x_i) + f_2(x_i)= \hat{y}_i^{(1)} + f_2(x_i)\\<br>&amp;\dots\\<br>\hat{y}<em>i^{(t)} &amp;= \sum</em>{k=1}^t f_k(x_i)= \hat{y}_i^{(t-1)} + f_t(x_i)<br>\end{aligned}<br>$$</p>
+<p>在第t步时，我们添加了一棵最优的CART树$f_t$，这棵最优的CART树$f_t$是怎么得来的呢？非常简单，就是在现有的t-1棵树的基础上，使得目标函数最小的那棵CART树，如下所示：<br>$$<br>\begin{aligned}\text{obj}^{(t)} &amp; = \sum_{i=1}^n l(y_i, \hat{y}<em>i^{(t)}) + \sum</em>{i=1}^t\Omega(f_i) \\<br>          &amp; = \sum_{i=1}^n l(y_i, \hat{y}_i^{(t-1)} + f_t(x_i)) + \Omega(f_t) + \mathrm{constant}\end{aligned}<br>$$<br>其中constant就是前t-1棵树的复杂度,假如我们使用的损失函数时MSE，那么上述表达式会变成这个样子：<br>$$<br>\begin{aligned}\text{obj}^{(t)} &amp; = \sum_{i=1}^n (y_i - (\hat{y}_i^{(t-1)} + f_t(x_i)))^2 + \sum_{i=1}^t\Omega(f_i) \\<br>          &amp; = \sum_{i=1}^n [2(\hat{y}_i^{(t-1)} - y_i)f_t(x_i) + f_t(x_i)^2] + \Omega(f_t) + \mathrm{constant}\end{aligned}<br>$$<br>这个式子非常漂亮，因为它含有$f_t(x_i)$的一次式和二次式，而且一次式项的系数是残差。你可能好奇，为什么有一次式和二次式就漂亮，因为它会对我们后续的优化提供很多方便<br><strong>Note</strong>:$f_t(x_i)$是什么？它其实就是$f_t$某个叶子节点的值。之前我们提到过，叶子节点的值是可以作为模型的参数的。<br>对于其他的损失函数，我们未必能得出如此漂亮的式子，所以，对于一般的损失函数，我们需要将其作泰勒二阶展开，如下所示：<br>$$<br>\text{obj}^{(t)} = \sum_{i=1}^n [l(y_i, \hat{y}_i^{(t-1)}) + g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t) + \mathrm{constant}<br>$$<br>其中：<br>$$<br>\begin{aligned}g_i &amp;= \partial_{\hat{y}_i^{(t-1)}} l(y_i, \hat{y}_i^{(t-1)})\\<br>h_i &amp;= \partial_{\hat{y}_i^{(t-1)}}^2 l(y_i, \hat{y}<em>i^{(t-1)})\end{aligned}<br>$$<br>去除常数项，可得<br>$$<br>\sum</em>{i=1}^n [g_i f_t(x_i) + \frac{1}{2} h_i f_t^2(x_i)] + \Omega(f_t)<br>$$</p>
+<blockquote>
 <p>为什么一次式和二次式显得那么漂亮，就是因为这些一次式和二次式的系数是$g_i$和$h_i$，而$g_i$和$h_i$可以并行地求出来。而且，$g_i$和$h_i$是不依赖于损失函数的形式的，只要这个损失函数二次可微就可以了。这有什么好处呢？好处就是xgboost可以支持自定义损失函数，只需满足二次可微即可。</p>
 </blockquote>
-<p>下面，定义后面的正则项，先对CART树作一番定义，如下所示：</p>
-<script type="math/tex; mode=display">
-f_t(x) = w_{q(x)}, w \in R^T, q:R^d\rightarrow \{1,2,\cdots,T\} .</script><p>需要解释下这个定义，首先，一棵树有$T$个叶子节点，这$T$个叶子节点的值组成了一个$T$维向量$w$，$q(x)$是一个映射，用来将样本映射成1到$T$的某个值，也就是把它分到某个叶子节点，$q(x)$其实就代表了CART树的结构。$w_q(x)$自然就是这棵树对样本$x$的预测值了。<br>xgboost使用了如下的正则化项：</p>
-<script type="math/tex; mode=display">
-\Omega(f) = \gamma T + \frac{1}{2}\lambda \sum_{j=1}^T w_j^2</script><p><strong>Note</strong>：这里出现了$γ$和$λ$，这是xgboost自己定义的，在使用xgboost时，你可以设定它们的值，显然，$γ$越大，表示越希望获得结构简单的树，因为此时对较多叶子节点的树的惩罚越大。$λ$越大也是越希望获得结构简单的树。<br>至此，我们关于第t棵树的优化目标已然很清晰，下面我们对它做如下变形</p>
-<script type="math/tex; mode=display">
-\begin{aligned}\text{obj}^{(t)} &\approx \sum_{i=1}^n [g_i w_{q(x_i)} + \frac{1}{2} h_i w_{q(x_i)}^2] + \gamma T + \frac{1}{2}\lambda \sum_{j=1}^T w_j^2\\
-&= \sum^T_{j=1} [(\sum_{i\in I_j} g_i) w_j + \frac{1}{2} (\sum_{i\in I_j} h_i + \lambda) w_j^2 ] + \gamma T\end{aligned}</script><p>其中$I_j$代表一个集合，集合中每个值代表一个训练样本的序号，整个集合就是被第$t$棵CART树分到了第$j$个叶子节点上的训练样本。<br>进一步，我们可以做如下简化：</p>
-<script type="math/tex; mode=display">
-\text{obj}^{(t)} = \sum^T_{j=1} [G_jw_j + \frac{1}{2} (H_j+\lambda) w_j^2] +\gamma T</script><p>对于第$t$棵CART树的某一个确定的结构（可用$q(x)$表示），所有的$G_j$和$H_j$都是确定的。而且上式中各个叶子节点的值$w_j$之间是互相独立的。上式其实就是一个简单的二次式，我们很容易求出各个叶子节点的最佳值以及此时目标函数的值。如下所示：</p>
-<script type="math/tex; mode=display">
-\begin{aligned}w_j^\ast &= -\frac{G_j}{H_j+\lambda}\\
-\text{obj}^\ast &= -\frac{1}{2} \sum_{j=1}^T \frac{G_j^2}{H_j+\lambda} + \gamma T\end{aligned}</script><p>其中${obj}^\ast$表示了这棵树的结构有多好，值越小，代表这样结构越好！也就是说，它是衡量第$t$棵CART树的结构好坏的标准。注意，这个值仅仅是用来衡量结构的好坏的，与叶子节点的值可是无关的。${obj}^\ast$只和$G_j$和$H_j$和T有关，而它们又只和树的结构$q(x)$有关，与叶子节点的值无关。<br>有了评判树的结构好坏的标准，我们就可以先求最佳的树结构，这个定出来后，最佳的叶子结点的值实际上在上面已经求出来了。问题是：树的结构近乎无限多，一个一个去测算它们的好坏程度，然后再取最好的显然是不现实的。所以，我们仍然需要采取一点策略，这就是逐步学习出最佳的树结构。这与我们将K棵树的模型分解成一棵一棵树来学习是一个道理，只不过从一棵一棵树变成了一层一层节点而已。<br>每次，我们在叶子节点上，找出所有的切分点。对每一个确定的切分点，我们衡量切分好坏的标准如下：</p>
-<script type="math/tex; mode=display">
-Gain = \frac{1}{2} \left[\frac{G_L^2}{H_L+\lambda}+\frac{G_R^2}{H_R+\lambda}-\frac{(G_L+G_R)^2}{H_L+H_R+\lambda}\right] - \gamma</script><p>这个$Gain$实际上就是单节点的${obj}^\ast$减去切分后的两个节点的树${obj}^\ast$，$Gain$如果是正的，并且值越大，表示切分后${obj}^\ast$越小于单节点的${obj}^\ast$，就越值得切分。同时，我们还可以观察到，$Gain$的左半部分如果小于右侧的γ，则$Gain$就是负的，表明切分后$obj$反而变大了。$γ$在这里实际上是一个临界值，它的值越大，表示我们对切分后$obj$下降幅度要求越严。这个值也是可以在xgboost中设定的。<br>扫描结束后，我们就可以确定是否切分，如果切分，对切分出来的两个节点，递归地调用这个切分过程，我们就能获得一个相对较好的树结构。<br><strong>Note</strong>：xgboost的切分操作和普通的决策树切分过程是不一样的。普通的决策树在切分的时候并不考虑树的复杂度，而依赖后续的剪枝操作来控制。<font color="red">xgboost在切分的时候就已经考虑了树的复杂度，就是那个$γ$参数。所以，它不需要进行单独的剪枝操作。</font></p>
+<p>下面，定义后面的正则项，先对CART树作一番定义，如下所示：<br>$$<br>f_t(x) = w_{q(x)}, w \in R^T, q:R^d\rightarrow {1,2,\cdots,T} .<br>$$<br>需要解释下这个定义，首先，一棵树有$T$个叶子节点，这$T$个叶子节点的值组成了一个$T$维向量$w$，$q(x)$是一个映射，用来将样本映射成1到$T$的某个值，也就是把它分到某个叶子节点，$q(x)$其实就代表了CART树的结构。$w_q(x)$自然就是这棵树对样本$x$的预测值了。<br>xgboost使用了如下的正则化项：<br>$$<br>\Omega(f) = \gamma T + \frac{1}{2}\lambda \sum_{j=1}^T w_j^2<br>$$<br><strong>Note</strong>：这里出现了$γ$和$λ$，这是xgboost自己定义的，在使用xgboost时，你可以设定它们的值，显然，$γ$越大，表示越希望获得结构简单的树，因为此时对较多叶子节点的树的惩罚越大。$λ$越大也是越希望获得结构简单的树。<br>至此，我们关于第t棵树的优化目标已然很清晰，下面我们对它做如下变形<br>$$<br>\begin{aligned}\text{obj}^{(t)} &amp;\approx \sum_{i=1}^n [g_i w_{q(x_i)} + \frac{1}{2} h_i w_{q(x_i)}^2] + \gamma T + \frac{1}{2}\lambda \sum_{j=1}^T w_j^2\\<br>&amp;= \sum^T_{j=1} [(\sum_{i\in I_j} g_i) w_j + \frac{1}{2} (\sum_{i\in I_j} h_i + \lambda) w_j^2 ] + \gamma T\end{aligned}<br>$$<br>其中$I_j$代表一个集合，集合中每个值代表一个训练样本的序号，整个集合就是被第$t$棵CART树分到了第$j$个叶子节点上的训练样本。<br>进一步，我们可以做如下简化：<br>$$<br>\text{obj}^{(t)} = \sum^T_{j=1} [G_jw_j + \frac{1}{2} (H_j+\lambda) w_j^2] +\gamma T<br>$$<br>对于第$t$棵CART树的某一个确定的结构（可用$q(x)$表示），所有的$G_j$和$H_j$都是确定的。而且上式中各个叶子节点的值$w_j$之间是互相独立的。上式其实就是一个简单的二次式，我们很容易求出各个叶子节点的最佳值以及此时目标函数的值。如下所示：<br>$$<br>\begin{aligned}w_j^\ast &amp;= -\frac{G_j}{H_j+\lambda}\\<br>\text{obj}^\ast &amp;= -\frac{1}{2} \sum_{j=1}^T \frac{G_j^2}{H_j+\lambda} + \gamma T\end{aligned}<br>$$<br>其中${obj}^\ast$表示了这棵树的结构有多好，值越小，代表这样结构越好！也就是说，它是衡量第$t$棵CART树的结构好坏的标准。注意，这个值仅仅是用来衡量结构的好坏的，与叶子节点的值可是无关的。${obj}^\ast$只和$G_j$和$H_j$和T有关，而它们又只和树的结构$q(x)$有关，与叶子节点的值无关。<br>有了评判树的结构好坏的标准，我们就可以先求最佳的树结构，这个定出来后，最佳的叶子结点的值实际上在上面已经求出来了。问题是：树的结构近乎无限多，一个一个去测算它们的好坏程度，然后再取最好的显然是不现实的。所以，我们仍然需要采取一点策略，这就是逐步学习出最佳的树结构。这与我们将K棵树的模型分解成一棵一棵树来学习是一个道理，只不过从一棵一棵树变成了一层一层节点而已。<br>每次，我们在叶子节点上，找出所有的切分点。对每一个确定的切分点，我们衡量切分好坏的标准如下：<br>$$<br>Gain = \frac{1}{2} \left[\frac{G_L^2}{H_L+\lambda}+\frac{G_R^2}{H_R+\lambda}-\frac{(G_L+G_R)^2}{H_L+H_R+\lambda}\right] - \gamma<br>$$<br>这个$Gain$实际上就是单节点的${obj}^\ast$减去切分后的两个节点的树${obj}^\ast$，$Gain$如果是正的，并且值越大，表示切分后${obj}^\ast$越小于单节点的${obj}^\ast$，就越值得切分。同时，我们还可以观察到，$Gain$的左半部分如果小于右侧的γ，则$Gain$就是负的，表明切分后$obj$反而变大了。$γ$在这里实际上是一个临界值，它的值越大，表示我们对切分后$obj$下降幅度要求越严。这个值也是可以在xgboost中设定的。<br>扫描结束后，我们就可以确定是否切分，如果切分，对切分出来的两个节点，递归地调用这个切分过程，我们就能获得一个相对较好的树结构。<br><strong>Note</strong>：xgboost的切分操作和普通的决策树切分过程是不一样的。普通的决策树在切分的时候并不考虑树的复杂度，而依赖后续的剪枝操作来控制。<font color="red">xgboost在切分的时候就已经考虑了树的复杂度，就是那个$γ$参数。所以，它不需要进行单独的剪枝操作。</font></p>
 <ul>
 <li><strong>GBDT和XGBoost区别</strong><ul>
 <li>传统的GBDT以CART树作为基学习器，XGBoost还 <strong><font color="red">支持线性分类器</font></strong>，这个时候XGBoost相当于L1和L2正则化的逻辑斯蒂回归（分类）或者线性回归（回归）；</li>
@@ -142,7 +92,7 @@ Gain = \frac{1}{2} \left[\frac{G_L^2}{H_L+\lambda}+\frac{G_R^2}{H_R+\lambda}-\fr
 <li>直接支持类别特征</li>
 <li>多线程优化</li>
 </ol>
-</div><div class="tags"><a href="/tags/algorithms/">algorithms</a></div><div class="post-nav"><a class="pre" href="/2019/04/29/xgboost-lightgbm调参指南/">xgboost&amp;lightgbm调参指南</a><a class="next" href="/2019/04/23/机器学习基础问题/">机器学习基础概念</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"><input type="hidden" name="sitesearch" value="http://yoursite.com"></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Kategorien</i></div></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/tags/algorithms/" style="font-size: 15px;">algorithms</a> <a href="/tags/machine-learning/" style="font-size: 15px;">machine learning</a> <a href="/tags/Algorithm-practice/" style="font-size: 15px;">Algorithm practice</a> <a href="/tags/Books-Note/" style="font-size: 15px;">Books Note</a> <a href="/tags/Recommendation-System/" style="font-size: 15px;">Recommendation System</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Letzte</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/05/28/深度排序模型概述（一）Wide&Deep_xDeepFM/">深度排序模型概述（一）Wide&Deep/xDeepFM</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/FM系列/">FM系列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/推荐系统概述（二）/">推荐系统概述（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/19/推荐系统概述（一）/">推荐系统概述（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/概率图模型/">概率图模型</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/06/百面机器学习/">百面机器学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/聚类算法一览/">聚类算法一览</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/EM算法/">EM算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/降维算法一览/">降维算法一览</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/29/xgboost-lightgbm调参指南/">xgboost&lightgbm调参指南</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Blogroll</i></div><ul></ul><a href="https://github.com/helloJamest" title="github" target="_blank">github</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2019 <a href="/." rel="nofollow">Jamest.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css"><script type="text/javascript" color="0,0,0" opacity="0.5" zindex="-2" count="50" src="//lib.baomitu.com/canvas-nest.js/2.0.3/canvas-nest.umd.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
+</div><div class="tags"><a href="/tags/algorithms/">algorithms</a></div><div class="post-nav"><a class="pre" href="/2019/04/29/xgboost-lightgbm调参指南/">xgboost&amp;lightgbm调参指南</a><a class="next" href="/2019/04/23/机器学习基础问题/">机器学习基础概念</a></div></div></div></div><div class="pure-u-1-4 hidden_mid_and_down"><div id="sidebar"><div class="widget"><form class="search-form" action="//www.google.com/search" method="get" accept-charset="utf-8" target="_blank"><input type="text" name="q" maxlength="20" placeholder="Search"><input type="hidden" name="sitesearch" value="http://yoursite.com"></form></div><div class="widget"><div class="widget-title"><i class="fa fa-folder-o"> Kategorien</i></div></div><div class="widget"><div class="widget-title"><i class="fa fa-star-o"> Tags</i></div><div class="tagcloud"><a href="/tags/algorithms/" style="font-size: 15px;">algorithms</a> <a href="/tags/machine-learning/" style="font-size: 15px;">machine learning</a> <a href="/tags/Algorithm-practice/" style="font-size: 15px;">Algorithm practice</a> <a href="/tags/Books-Note/" style="font-size: 15px;">Books Note</a> <a href="/tags/Recommendation-System/" style="font-size: 15px;">Recommendation System</a> <a href="/tags/NLP/" style="font-size: 15px;">NLP</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-file-o"> Letzte</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2019/06/20/RNN基础/">RNN基础</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/28/深度排序模型概述（一）Wide&Deep_xDeepFM/">深度排序模型概述（一）Wide&Deep/xDeepFM</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/FM系列/">FM系列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/推荐系统概述（二）/">推荐系统概述（二）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/19/推荐系统概述（一）/">推荐系统概述（一）</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/概率图模型/">概率图模型</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/06/百面机器学习/">百面机器学习</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/聚类算法一览/">聚类算法一览</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/EM算法/">EM算法</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/降维算法一览/">降维算法一览</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-external-link"> Blogroll</i></div><ul></ul><a href="https://github.com/helloJamest" title="github" target="_blank">github</a></div></div></div><div class="pure-u-1 pure-u-md-3-4"><div id="footer">Copyright © 2019 <a href="/." rel="nofollow">Jamest.</a> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a><a rel="nofollow" target="_blank" href="https://github.com/tufu9441/maupassant-hexo"> Theme</a> by<a rel="nofollow" target="_blank" href="https://github.com/pagecho"> Cho.</a></div></div></div><a class="show" id="rocket" href="#top"></a><script type="text/javascript" src="/js/totop.js?v=0.0.0" async></script><script type="text/javascript" src="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js" async></script><script type="text/javascript" src="/js/fancybox.js?v=0.0.0" async></script><link rel="stylesheet" type="text/css" href="//lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css"><script type="text/javascript" color="0,0,0" opacity="0.5" zindex="-2" count="50" src="//lib.baomitu.com/canvas-nest.js/2.0.3/canvas-nest.umd.js"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({
   tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}
   });
 </script><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML" async></script><script type="text/javascript" src="/js/codeblock-resizer.js?v=0.0.0"></script><script type="text/javascript" src="/js/smartresize.js?v=0.0.0"></script></div></body></html>
